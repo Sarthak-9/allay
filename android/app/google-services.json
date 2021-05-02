@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "721774126573",
+    "project_id": "allay-convo",
+    "storage_bucket": "allay-convo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721774126573:android:71fc5101b36f73fcfdf3e4",
+        "android_client_info": {
+          "package_name": "com.convo.allay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721774126573-3isfr4rump9hcrhct71sajandsb2lh88.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.convo.allay",
+            "certificate_hash": "c95a45876455405140fd4dc932bab1e7ab0ef487"
+          }
+        },
+        {
+          "client_id": "721774126573-ckdsob13f7qd7c5pc5mcquin4t4lct1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCENIWxX7oEzOy72G079kuUkrBHVooRTJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721774126573-ckdsob13f7qd7c5pc5mcquin4t4lct1e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
