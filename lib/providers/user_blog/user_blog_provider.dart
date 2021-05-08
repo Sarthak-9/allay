@@ -7,43 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class UserBlogs with ChangeNotifier{
-  List<UserBlog> _userBlogList = [
-    UserBlog(
-        userBlogId: '1',
-        userBlogText: 'Blog 1',
-        userBlogMood: 'Happy',
-      userBlogTitle: 'Blog 1',
-      userBlogDate: DateTime.now(),
-    ),
-    UserBlog(
-        userBlogId: '2',
-        userBlogText: 'Blog 2',
-        userBlogMood: 'Happy',
-        userBlogTitle: 'Blog 2',
-      userBlogDate: DateTime.now(),
-    ),
-    UserBlog(
-        userBlogId: '3',
-        userBlogText: 'Blog 3',
-        userBlogMood: 'Happy',
-        userBlogTitle: 'Blog 3',
-      userBlogDate: DateTime.now(),
-    ),
-    UserBlog(
-      userBlogId: '4',
-        userBlogText: 'Blog 4',
-        userBlogMood: 'Happy',
-        userBlogTitle: 'Blog 4',
-  userBlogDate: DateTime.now(),
-    ),
-    UserBlog(
-        userBlogId: '5',
-        userBlogMood: 'Happy',
-        userBlogText: 'Blog 5',
-        userBlogTitle: 'Blog 5',
-      userBlogDate: DateTime.now(),
-    )
-  ];
+  List<UserBlog> _userBlogList = [];
   List<UserBlog> _recentUserBlogs = [];
   final firestoreInstance = FirebaseFirestore.instance;
 
@@ -97,7 +61,7 @@ class UserBlogs with ChangeNotifier{
     List<UserBlog> loadedBlogs = [];
     try{
       final querySnapshot = await firestoreInstance.collection("userblogs").doc(_userID).collection('myprivateblogs')
-          .get(); //.then((querySnapshot) {
+          .get();
       querySnapshot.docs
           .forEach((result) {
         UserBlog loadedBlog = UserBlog(
@@ -108,7 +72,6 @@ class UserBlogs with ChangeNotifier{
           userBlogMood: result.data()["userBlogMood"],
           userBlogAnalysisReport:result.data()["userBlogAnalysisReport"],
           userBlogImageUrl: result.data()["userBlogImageUrl"],
-          // userBlogImage: result.data()["userBlogImage"],
         );
         loadedBlogs.add(loadedBlog);
       });
@@ -132,7 +95,23 @@ class UserBlogs with ChangeNotifier{
   }
 
   UserBlog findUserBlogById(String userBlogId){
-    // print(_userBlogList[0].userBlogId);
     return _userBlogList.firstWhere((userBlog) => userBlog.userBlogId == userBlogId);
+  }
+
+  Future<void> deleteBlog(String userBlogId)async{
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    var _userID = _auth.currentUser.uid;
+   await firestoreInstance.collection("userblogs").doc(_userID).collection('myprivateblogs').doc(userBlogId).delete();
+  }
+
+  List<UserBlog> sortByMood(String mood){
+    List<UserBlog> sortMood = [];
+    _userBlogList.forEach((blog) {
+      if(blog.userBlogMood == mood) {
+        sortMood.add(blog);
+      }
+    });
+    // _moodSortedPublicBlogList = sortMood;
+    return sortMood;
   }
 }

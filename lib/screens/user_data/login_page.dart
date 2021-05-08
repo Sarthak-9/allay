@@ -42,208 +42,204 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final Color primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0,
-        //   actions: [
-        //     IconButton(
-        //         color: primaryColor,
-        //         // color: Theme.of(context).primaryColor,
-        //         icon: Icon(Icons.cancel_outlined), onPressed: ()async{
-        //       await storage.write(key: "signedIn",value: "null");
-        //       // Navigator.of(context).pushReplacementNamed(HomePage.routeName);
-        //     }),
-        //   ],
-        // ),
-        body: Stack(
-          children: [
-            Container(
-              color: Colors.grey,
-              child: Image.asset("assets/images/background_sample.jpg",height: MediaQuery.of(context).size.height,fit: BoxFit.cover,),
+        body: Container(
+          alignment: Alignment.topCenter,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('assets/images/bg3.jpg'),
+              fit: BoxFit.fill,
+              alignment:Alignment.topCenter,
             ),
-            Container(
-              alignment: Alignment.topCenter,
-              margin: EdgeInsets.symmetric(horizontal: 30),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _loginkey,
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 80,),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child:Text('ALLAY',style: TextStyle(
-                          fontSize: 45,
-                            // color: Colors.white
-                        ),)
-                      ),
-                      SizedBox(height: 50),
-                      Text(
-                        'Sign-in to Allay',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          // color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor, width: 2)),
-                        padding: EdgeInsets.all(4.0),//.symmetric(horizontal: 4.0),
-                        child: TextFormField(
-                          controller: _emailController,
-                          validator: (value) {
-                            if (value.isEmpty || !value.contains('@')) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _userEmail = value;
-                          },
-                          keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              labelText: 'Username',
-                              labelStyle: TextStyle(color: Colors.teal),
-                              icon: Icon(
-                                Icons.account_circle,
-                                color: primaryColor,
-                              ),
-                              // prefix: Icon(icon),
-                              border: InputBorder.none),
-                        ),
-                      ),
-                      // _buildTextField(
-                      //     nameController, Icons.account_circle, 'Username'),
-                      SizedBox(height: 20),
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor, width: 2)),
-                        padding: EdgeInsets.all(4.0),
-                        child: TextFormField(
-                          controller: _passwordController,
-                          validator: (value) {
-                            if (value.isEmpty || value.length < 7) {
-                              return 'Password must be atleast 7 charachters';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _userPassword = value;
-                          },
-                          obscureText: _obsecurePassword,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              labelText: 'Password',
-                              labelStyle: TextStyle(color: Colors.teal),
-                              icon: Icon(
-                                Icons.lock,
-                                color: primaryColor,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.compass_calibration_outlined),
-                                onPressed: (){
-                                  setState(() {
-                                    _obsecurePassword = !_obsecurePassword;
-                                  });
-                                },
-                              ),
-                              // prefix: Icon(icon),
-                              border: InputBorder.none),
-                        ),
-                      ),
-                      // _buildTextField(passwordController, Icons.lock, 'Password'),
-                      SizedBox(height: 30),
-                      Container(decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                              color: Colors.teal, width: 2)
-                        ),
-                        child: MaterialButton(
-                          elevation: 0,
-                          minWidth: double.maxFinite,
-                          height: 50,
-                          onPressed: _submitAuthFormLogin,
-                          color: Colors.teal,
-                          child: _isLoading ? CircularProgressIndicator(
-                            backgroundColor: Theme.of(context).primaryColor,
-                          ): Text('Login',
-                              style: TextStyle(color: Colors.white, fontSize: 16)),
-                          textColor: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor, width: 2)),
-                        child: MaterialButton(
-                          elevation: 0,
-                          minWidth: double.maxFinite,
-                          height: 50,
-                          onPressed: _signInWithGoogle,
-                          color: Theme.of(context).primaryColor,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(Icons.assignment_ind),
-                              SizedBox(width: 10),
-                              Text('Sign-in using Google',
+          ),
+          // Container(
+          //   child: Image.asset("assets/images/bg3.jpg",height: MediaQuery.of(context).size.height*1.1,fit: BoxFit.fitHeight,width: MediaQuery.of(context).size.width,),
+          // ),
+          // margin: EdgeInsets.symmetric(horizontal: 30),
+          child: Stack(
+            children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _loginkey,
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: 80,),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child:Text('ALLAY',style: TextStyle(
+                              fontSize: 45,
+                                // color: Colors.white
+                            ),)
+                          ),
+                          SizedBox(height: 50),
+                          Text(
+                            'Sign-in',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              // color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Theme.of(context).primaryColor, width: 2)),
+                            padding: EdgeInsets.all(4.0),//.symmetric(horizontal: 4.0),
+                            child: TextFormField(
+                              controller: _emailController,
+                              validator: (value) {
+                                if (value.isEmpty || !value.contains('@')) {
+                                  return 'Please enter a valid email address';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _userEmail = value;
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(color: Colors.black),
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                  labelText: 'Email',
+                                  labelStyle: TextStyle(color: Colors.teal),
+                                  icon: Icon(
+                                    Icons.account_circle,
+                                    color: primaryColor,
+                                  ),
+                                  // prefix: Icon(icon),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          // _buildTextField(
+                          //     nameController, Icons.account_circle, 'Username'),
+                          SizedBox(height: 20),
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Theme.of(context).primaryColor, width: 2)),
+                            padding: EdgeInsets.all(4.0),
+                            child: TextFormField(
+                              controller: _passwordController,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 7) {
+                                  return 'Password must be atleast 7 charachters';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _userPassword = value;
+                              },
+                              obscureText: _obsecurePassword,
+                              style: TextStyle(color: Colors.black),
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                  labelText: 'Password',
+                                  labelStyle: TextStyle(color: Colors.teal),
+                                  icon: Icon(
+                                    Icons.lock,
+                                    color: primaryColor,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.compass_calibration_outlined),
+                                    onPressed: (){
+                                      setState(() {
+                                        _obsecurePassword = !_obsecurePassword;
+                                      });
+                                    },
+                                  ),
+                                  // prefix: Icon(icon),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          // _buildTextField(passwordController, Icons.lock, 'Password'),
+                          SizedBox(height: 30),
+                          Container(decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  color: Colors.teal, width: 2)
+                            ),
+                            child: MaterialButton(
+                              elevation: 0,
+                              minWidth: double.maxFinite,
+                              height: 50,
+                              onPressed: _submitAuthFormLogin,
+                              color: Colors.teal,
+                              child: _isLoading ? CircularProgressIndicator(
+                                backgroundColor: Theme.of(context).primaryColor,
+                              ): Text('Login',
                                   style: TextStyle(color: Colors.white, fontSize: 16)),
-                            ],
+                              textColor: Colors.white,
+                            ),
                           ),
-                          textColor: Colors.white,
-                        ),
-                      ),
-                      // OutlinedButton(onPressed: (){}),
-                      SizedBox(height: 20),
-                      MaterialButton(
-                        color: Colors.grey.shade100,
-                        child: Text(
-                          "  New here ? Sign Up  ",
-                          style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16
+                          SizedBox(height: 20),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Theme.of(context).primaryColor, width: 2)),
+                            child: MaterialButton(
+                              elevation: 0,
+                              minWidth: double.maxFinite,
+                              height: 50,
+                              onPressed: _signInWithGoogle,
+                              color: Theme.of(context).primaryColor,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(Icons.assignment_ind),
+                                  SizedBox(width: 10),
+                                  Text('Sign-in using Google',
+                                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                                ],
+                              ),
+                              textColor: Colors.white,
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage(tabNumber: 0,)));
-                          // Navigator.of(context).pushNamed(SignUp.routename);
-                          // Navigator.pushNamed(context, SignUp.routename);
-                          Navigator.of(context).pushReplacementNamed(SignUp.routename);
-                        },
+                          // OutlinedButton(onPressed: (){}),
+                          SizedBox(height: 20),
+                          MaterialButton(
+                            color: Colors.white,
+                            child: Text(
+                              "  New here ? Sign Up  ",
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pushReplacementNamed(SignUp.routename);
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextButton(
+                            onPressed:_resetPassword,
+                            child: Text(
+                              "Forgot Password ? Need help ",
+                              style: TextStyle(color: Colors.teal.shade400, fontSize: 14),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 10),
-                      TextButton(
-                        onPressed:_resetPassword,
-                        child: Text(
-                          "Forgot Password ? Need help ",
-                          style: TextStyle(color: Colors.teal.shade400, fontSize: 14),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ));
+          ),
+        );
   }
 
   _signInWithGoogle()async {
@@ -259,6 +255,7 @@ class _LoginPageState extends State<LoginPage> {
           await Provider.of<UserData>(context,listen: false).addUser(newUser);
         }
         await storage.write(key: "signedIn",value: "true");
+        Navigator.of(context).pushReplacementNamed(MyHomePage.routeName);
         // Navigator.of(context).pushReplacementNamed(HomePage.routeName);
       }}catch(error){
       print(error);

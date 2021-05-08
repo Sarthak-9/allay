@@ -40,46 +40,25 @@ class UserData with ChangeNotifier {
     var _userID = _auth.currentUser.uid;
     print(_userID);
     try {
-      // final databaseRef = FirebaseDatabase.instance
-      //     .reference()
-      //     .child('user')
-      //     .child(_userID); //database reference object
-      // await databaseRef.push().set({
-      //   'userEmail': newUser.userEmail,
-      //   'userName': newUser.userName,
-      //   'userPhone': newUser.userPhone,
-      //   'userDOB': newUser.dateofBirth != null
-      //       ? newUser.dateofBirth.toIso8601String()
-      //       : null,
-      // });
-      var userDataId;
-      var photoUrl;
-      // FirebaseStorage storage = FirebaseStorage.instance;
-      // Reference ref =
-      // storage.ref().child("userblogs").child(DateTime.now().toString());
-      // UploadTask uploadTask = ref.putFile(newUser.userProfileImage);
-      // await uploadTask.whenComplete(() async {
-      //   photoUrl = await ref.getDownloadURL();
-      // }).catchError((onError) {
-      //   throw onError;
-      // });
-      firestoreInstance.collection("userdata").add({
+      firestoreInstance.collection("userdata").doc(_userID).collection('userdetails').add({
         'userEmail': newUser.userEmail,
         'userName': newUser.userName,
         'userPhone': newUser.userPhone,
         'userDOB': newUser.dateofBirth != null
             ? newUser.dateofBirth.toIso8601String()
             : null,
+        "profilePhotoLink": newUser.profilePhotoLink,
       }).then((value) {
         // blogFirestoreId = value.id;
       });
-      print('done');
       final user = UserDataModel(
           userFId: _userID,
           userEmail: newUser.userEmail,
           userPhone: newUser.userPhone,
           userName: newUser.userName,
-          dateofBirth: newUser.dateofBirth);
+          dateofBirth: newUser.dateofBirth,
+        profilePhotoLink: null
+      );
       _userData = user;
       notifyListeners();
     } catch (error) {
@@ -88,83 +67,63 @@ class UserData with ChangeNotifier {
   }
 
   Future<void> updateUser(UserDataModel updateUser) async {
+    String photoUrl;
     FirebaseAuth _auth = FirebaseAuth.instance;
     var _userID = _auth.currentUser.uid;
     var userFid = _userData.userFId;
-
-    // var url = Uri.parse('https://yourday-306218-default-rtdb.firebaseio.com/user/$_userID/$userFid.json');
     try {
-      final databaseRef = FirebaseDatabase.instance
-          .reference()
-          .child('user')
-          .child(_userID)
-          .child(userFid); //database reference object
-      await databaseRef.update({
-        'userEmail': updateUser.userEmail,
-        'userName': updateUser.userName,
+      if(updateUser.userProfileImage!=null){
+        FirebaseStorage storage = FirebaseStorage.instance;
+        Reference ref =
+        storage.ref().child("userblogs").child(DateTime.now().toString());
+        UploadTask uploadTask = ref.putFile(updateUser.userProfileImage);
+        await uploadTask.whenComplete(() async {
+          photoUrl = await ref.getDownloadURL();
+        }).catchError((onError) {
+          throw onError;
+        });
+      }else{
+        photoUrl = _userData.profilePhotoLink;
+      }
+      await firestoreInstance.collection("userdata").doc(_userID).collection('userdetails').doc(userFid).update({
         'userPhone': updateUser.userPhone,
         'userDOB': updateUser.dateofBirth != null
             ? updateUser.dateofBirth.toIso8601String()
             : null,
-        'profilePhotoLink': updateUser.profilePhotoLink
+        "profilePhotoLink": photoUrl,
+      }).then((value) {
+        // blogFirestoreId = value.id;
       });
-
-      final user = UserDataModel(
-          userFId: userFid,
-          userEmail: updateUser.userEmail,
-          userPhone: updateUser.userPhone,
-          userName: updateUser.userName,
-          dateofBirth: updateUser.dateofBirth);
-      _userData = user;
       notifyListeners();
     } catch (error) {
       throw error;
     }
   }
 
-  Future<bool> fetchUser() async {
-    print('21');
+  Future<void> fetchUser() async {
     FirebaseAuth _auth = FirebaseAuth.instance;
-    print('22');
     if (_auth == null || _auth.currentUser == null) {
-      print('23');
-      return false;
+      return;
     }
-    print('24');
     _auth.currentUser.refreshToken;
-    print('25');
     var _userID = _auth.currentUser.uid;
-    print('26');
-    var url = Uri.parse(
-        'https://yourday-306218-default-rtdb.firebaseio.com/user/$_userID.json');
-    try {
-      final response = await http.get(url);
-      print(response);
-      if (response == null) {
-        print('27');
-        return false;
-      }
-      print('28');
-      UserDataModel _loadedUser;
-      final extractedUser = json.decode(response.body) as Map<String, dynamic>;
-      extractedUser.forEach((key, userdata) {
-        _loadedUser = UserDataModel(
-          userFId: key,
-          userEmail: userdata['userEmail'],
-          userPhone: userdata['userPhone'],
-          userName: userdata['userName'],
-          dateofBirth: userdata['userDOB'] != null
-              ? DateTime.parse(userdata['userDOB'])
-              : null,
-          profilePhotoLink: userdata['profilePhotoLink'],
-        );
-      });
+    UserDataModel _loadedUser;
+    final querySnapshot = await firestoreInstance.collection("userdata").doc(_userID).collection('userdetails')
+        .get(); //.then((querySnapshot) {
+    querySnapshot.docs
+        .forEach((result) {
+          var user = UserDataModel(
+            userFId: result.id,
+            userEmail: result.data()["userEmail"],
+            userPhone: result.data()["userPhone"],
+            userName: result.data()["userName"],
+            dateofBirth: result.data()["userDOB"] != null
+                ? DateTime.parse(result.data()["userDOB"])
+                : null,
+            profilePhotoLink: result.data()["profilePhotoLink"],
+      );
+          _loadedUser = user;
+    });
       _userData = _loadedUser;
-      return true;
-    } catch (error) {
-      return false;
-      print(error);
-      throw error;
-    }
   }
 }

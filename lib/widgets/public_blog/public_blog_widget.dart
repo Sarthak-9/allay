@@ -35,6 +35,15 @@ class PublicBlogWidget extends StatefulWidget {
 }
 
 class _PublicBlogWidgetState extends State<PublicBlogWidget> {
+  bool likedStatus = false;
+  String photoUrl = null;
+  @override
+  void initState() {
+    // TODO: implement initState
+    likedStatus = widget.currentUserLiked;
+    photoUrl = widget.authorProfilePicture;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -54,9 +63,9 @@ class _PublicBlogWidgetState extends State<PublicBlogWidget> {
              ListTile(
                leading: CircleAvatar(
                  radius: MediaQuery.of(context).size.width*0.09,
-                 backgroundImage: AssetImage("assets/images/userimage.png"),
+                 backgroundImage:photoUrl!=null?NetworkImage(photoUrl): AssetImage("assets/images/userimage.png"),
                ),
-               title: Text('authorUserName'),
+               title: Text(widget.authorUserName),
                subtitle: Text(DateFormat('dd / MM / yyyy').format(widget.publicBlogDate)),
                trailing: Chip(
                  backgroundColor: getMoodColor(widget.publicBlogMood),
@@ -93,19 +102,20 @@ class _PublicBlogWidgetState extends State<PublicBlogWidget> {
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                children: [
-                 IconButton(icon:widget.currentUserLiked?Icon(Icons.thumb_up_alt_rounded):Icon(Icons.thumb_up_alt_outlined),
+                 IconButton(icon:likedStatus?Icon(Icons.thumb_up_alt_rounded):Icon(Icons.thumb_up_alt_outlined),
                      onPressed: (){
-                   widget.currentUserLiked = !widget.currentUserLiked;
-                   setState(() {
-
-                   });
+                       likedStatus = !likedStatus;
+                   setState(() {});
+                   Provider.of<PublicBlogs>(context,listen: false).likePublicBlog(widget.publicBlogId, likedStatus);
                      }),
                  IconButton(icon:Icon(Icons.share_rounded),
                      onPressed: ()async{
-                     await  Provider.of<PublicBlogs>(context,listen: false).saveBlog(widget.publicBlogId);
                      }),
                  IconButton(icon:Icon(Icons.save),
-                     onPressed: (){}),
+                     onPressed: ()async{
+                   Provider.of<PublicBlogs>(context,listen: false).saveBlog(widget.publicBlogId);
+
+                     }),
                ],
              )
            ],

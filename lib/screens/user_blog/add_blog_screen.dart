@@ -10,6 +10,7 @@ import 'package:allay/providers/user_data/user_data_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:sentiment_dart/sentiment_dart.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -31,10 +32,12 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   File photoOfTheDay = null;
   int moodNumber = -1;
   var analysisReport = null;
-  var analysisScore = '0';
+  int analysisScore = 0;
   Map<String, int> postiveWords = {};
+
   @override
   Widget build(BuildContext context) {
+    Color borderColor = Theme.of(context).primaryColor;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -83,10 +86,11 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       },
                       child: Text('Happy'),
                       style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.resolveWith((states) => Size(80.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
                               moodNumber == 1 || moodNumber == -1
                                   ? const Color(0xFFD4860B)
-                                  : Colors.grey)),
+                                  : const Color(0xFFD4860B).withOpacity(0.5))),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -94,10 +98,11 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       },
                       child: Text('Excited'),
                       style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.resolveWith((states) => Size(80.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
                               moodNumber == 2 || moodNumber == -1
                                   ? const Color(0xFF149A80)
-                                  : Colors.grey) //#D4860B
+                                  : const Color(0xFF149A80).withOpacity(0.5)) //#D4860B
                           ),
                     ),
                     ElevatedButton(
@@ -106,10 +111,11 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       },
                       child: Text('Angry'),
                       style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.resolveWith((states) => Size(80.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
                               moodNumber == 3 || moodNumber == -1
                                   ? const Color(0xFFE12E1C)
-                                  : Colors.grey)),
+                                  : const Color(0xFFE12E1C).withOpacity(0.5))),
                     ),
                   ],
                 ),
@@ -123,10 +129,11 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       },
                       child: Text('Sad'),
                       style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.resolveWith((states) => Size(90.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
                               moodNumber == 4 || moodNumber == -1
                                   ? const Color(0xFF1E2B37)
-                                  : Colors.grey)),
+                                  : const Color(0xFF1E2B37).withOpacity(0.5))),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -134,22 +141,23 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       },
                       child: Text('Depressed'),
                       style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.resolveWith((states) => Size(90.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
                               moodNumber == 5 || moodNumber == -1
                                   ? const Color(0xFF809395)
-                                  : Colors.grey)),
+                                  : const Color(0xFF809395).withOpacity(0.5))),
                     ),
-                    // SizedBox(width: 30,),
                     ElevatedButton(
                       onPressed: () {
                         setMood(6);
                       },
                       child: Text('Neutral'),
                       style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.resolveWith((states) => Size(90.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
                               moodNumber == 6 || moodNumber == -1
                                   ?  Colors.blue
-                                  : Colors.grey) //#D4860B
+                                  : Colors.blue.withOpacity(0.5)) //#D4860B
                       ),
                     ),
                   ],
@@ -158,91 +166,139 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                   height: 20,
                 ),
                 Container(
-                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: Theme.of(context).primaryColor, width: 2)),
-                  child: TextFormField(
-                    controller: _blogtitleController,
-                    textCapitalization: TextCapitalization.words,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(hintText: 'Title'),
+                          color: Colors.black54
+                      )
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                          color: Theme.of(context).primaryColor, width: 2)),
-                  child: TextButton(
-                    child: _dateSelected
-                        ? Text(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        // alignment: Alignment.center,
+                        // decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(5),
+                        //     border: Border.all(
+                        //         color: borderColor, width: 2)),
+                        child: TextFormField(
+                          controller: _blogtitleController,
+                          textCapitalization: TextCapitalization.words,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(hintText: 'Title'),
+                          validator: (value) {
+                            if (value.length == 0) {
+                              return 'Enter a valid title';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      if(moodNumber!=-1)
+                        SizedBox(
+                          height: 20,
+                        ),
+                      if(moodNumber!=-1)
+                        Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              // color: Colors.red,//getMoodColorFromNumber(moodNumber),
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: borderColor, width: 2)
+                            ),
+                            child: Text(getMoodText(moodNumber),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: getMoodColorFromNumber(moodNumber),
+                              ),
+                            )
+                        ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        height: 50,
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                                color: borderColor, width: 2)),
+                        child: TextButton(
+                          child: _dateSelected
+                              ? Text(
                             DateFormat('dd / MM / yyyy').format(dateTime),
                             style: TextStyle(
                               color: Colors.black,
                             ),
                           )
-                        : Text(
+                              : Text(
                             'Select Date',
                             style: TextStyle(
                               color: Colors.black45,
                             ),
                           ),
-                    style: TextButton.styleFrom(
-                        // minimumSize: MaterialStateProperty.all(Size.fromWidth(MediaQuery.of(context).size.width * 0.8)),
-                        tapTargetSize: MaterialTapTargetSize.padded,
-                        minimumSize: const Size(double.infinity,50),
-                    ),
-                    // splashColor: Colors.red.shade50,
-                    // focusColor: Colors.red,
-                    onPressed: () async {
-                      // FocusNode().context.un
-                      dateTime = await PlatformDatePicker.showDate(
-                        context: context,
-                        firstDate: DateTime(DateTime.now().year - 50),
-                        initialDate: DateTime.now(),
-                        lastDate: DateTime(DateTime.now().year + 2),
-                        builder: (context, child) => Theme(
-                          data: ThemeData(
-                            colorScheme: ColorScheme.light(
-                              primary: Theme.of(context).primaryColor,
-                            ),
-                            buttonTheme: ButtonThemeData(
-                                textTheme: ButtonTextTheme.primary),
+                          style: TextButton.styleFrom(
+                            tapTargetSize: MaterialTapTargetSize.padded,
+                            minimumSize: const Size(double.infinity,50),
                           ),
-                          child: child,
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
+                            dateTime = await PlatformDatePicker.showDate(
+                              context: context,
+                              firstDate: DateTime(DateTime.now().year - 100),
+                              initialDate: DateTime.now(),
+                              lastDate: DateTime(DateTime.now().year + 2),
+                              builder: (context, child) => Theme(
+                                data: ThemeData(
+                                  colorScheme: ColorScheme.light(
+                                    primary: Theme.of(context).primaryColor,
+                                  ),
+                                  buttonTheme: ButtonThemeData(
+                                      textTheme: ButtonTextTheme.primary),
+                                ),
+                                child: child,
+                              ),
+                            );
+                            if (dateTime != null) {
+                              setState(() {
+                                _dateSelected = true;
+                              });
+                            }
+                          },
                         ),
-                      );
-                      if (dateTime != null) {
-                        setState(() {
-                          _dateSelected = true;
-                        });
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  // height: MediaQuery.of(context).size.height *0.6,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                          color: Theme.of(context).primaryColor, width: 2)),
-                  child: TextFormField(
-                    controller: _blogtextController,
-                    textCapitalization: TextCapitalization.sentences,
-                    maxLines:
-                        (MediaQuery.of(context).size.height * 0.025).toInt(),
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(hintText: 'Write here'),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        // height: MediaQuery.of(context).size.height *0.6,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                                color: borderColor, width: 2)),
+                        child: TextFormField(
+                          controller: _blogtextController,
+                          textCapitalization: TextCapitalization.sentences,
+                          validator: (value) {
+                            if (value.length < 50) {
+                              return 'Blog should be  characters long';
+                            }
+                            return null;
+                          },
+                          maxLines:
+                          (MediaQuery.of(context).size.height * 0.025).toInt(),
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(hintText: 'Write here'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -277,8 +333,26 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           SizedBox(
                             height: 20,
                           ),
+                          Padding(
+                            padding:const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(9),
+                                    border: Border.all(
+                                        color: borderColor, width: 0.7)),
+                                child: FAProgressBar(
+                                  currentValue:analysisScore>=0? analysisScore : -analysisScore,
+                                  // displayText: '%',
+                                  direction: Axis.horizontal,
+                                  // backgroundColor: Colors.red,
+                                  progressColor: analysisScore>=0?Colors.green : Colors.red,
+                                ),
+                              )),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Text(
-                            'Your score is : $analysisScore',
+                            'Your score is : ${analysisScore.toString()}',
                             style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(
@@ -331,9 +405,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
     try {
       final pickedFile = await ImagePicker().getImage(
         source: ImageSource.gallery,
-        // maxWidth: maxWidth,
-        // maxHeight: maxHeight,
-        // imageQuality: quality,
+        imageQuality: 50
       );
       setState(() {
         photoOfTheDay = File(pickedFile.path);
@@ -353,14 +425,12 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
       var blogText = _blogtextController.text;
       final sentiment = Sentiment();
       analysisReport = sentiment.analysis(blogText);
-      print(analysisReport);
-      analysisScore = analysisReport['score'].toString();
+      analysisScore = (analysisReport['comparative']*100).toInt();
       setState(() {});
     }
   }
 
   void publishAsPrivate() async {
-    // addBlogKey.currentState.
     if (moodNumber == -1) {
       await showDialog(
         context: context,
@@ -401,13 +471,16 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
     if (!isValid) {
       return;
     }
+    if(analysisScore ==0) {
+      analyzeBlog();
+    }
 
     UserBlog currentBlog = UserBlog(
       userBlogTitle: _blogtitleController.text,
       userBlogMood: getMoodText(moodNumber),
       userBlogDate: dateTime,
       userBlogText: _blogtextController.text,
-      userBlogAnalysisReport: analysisScore,
+      userBlogAnalysisReport: analysisScore.toString(),
       userBlogImage: photoOfTheDay,
       userBlogImageUrl: null,
     );
@@ -416,7 +489,6 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   }
 
   void publishAsPublic() async {
-    // addBlogKey.currentState.
     if (moodNumber == -1) {
       await showDialog(
         context: context,
@@ -435,43 +507,58 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
       );
       return;
     }
-    if (dateTime == null) {
+    var isValid = addBlogKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    bool uploadBlog = false;
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('Select Date !!'),
-          content: Text('Set date of the blog.'),
+          title: Text('Are you sure'),
+          content: Text('Do you want to upload this blog publically?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Okay'),
+              child: Text('No'),
+              onPressed: (){
+                uploadBlog = false;
+                Navigator.of(ctx).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
               onPressed: () {
+                uploadBlog = true;
                 Navigator.of(ctx).pop();
               },
             )
           ],
         ),
       );
-      return;
+
+    if(uploadBlog){
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      var _userID = _auth.currentUser.uid;
+      var userData = Provider.of<UserData>(context, listen: false).userData;
+      List<String> initLikes = [];
+      PublicBlog currentBlog = PublicBlog(
+          authorUserName: userData.userName,
+          authorUserId: _userID,
+          authorImageUrl: userData.profilePhotoLink,
+          publicBlogTitle: _blogtitleController.text,
+          publicBlogMood: getMoodText(moodNumber),
+          publicBlogDate: DateTime.now(),
+          publicBlogText: _blogtextController.text,
+          publicBlogLikes: initLikes,
+          publicBlogCurrentUserLiked: false);
+      Provider.of<PublicBlogs>(context, listen: false)
+          .addPublicBlog(currentBlog);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(
+                    tabNumber: 0,
+                  )));
     }
-    var isValid = addBlogKey.currentState.validate();
-    if (!isValid) {
-      return;
-    }
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    var _userID = _auth.currentUser.uid;
-    var authorImageUrl = Provider.of<UserData>(context).userData.profilePhotoLink;
-    PublicBlog currentBlog = PublicBlog(
-        authorUserName: _auth.currentUser.displayName,
-        authorUserId: _userID,
-        authorImageUrl: authorImageUrl,
-        publicBlogTitle: _blogtitleController.text,
-        publicBlogMood: getMoodText(moodNumber),
-        publicBlogDate: dateTime,
-        publicBlogText: _blogtextController.text,
-        publicBlogCurrentUserLiked: false);
-        Provider.of<PublicBlogs>(context, listen: false).addPublicBlog(currentBlog);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage(tabNumber: 0,)));
-    // Provider.of<PublicBlogs>(context, listen: false).fetchBlogs();
-    // addBlogKey.currentState.val
   }
 }

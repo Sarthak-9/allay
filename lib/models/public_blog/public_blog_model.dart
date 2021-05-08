@@ -10,6 +10,7 @@ class PublicBlog{
   final String publicBlogText;
   final List<String> publicBlogLikes;
   bool publicBlogCurrentUserLiked;
+  bool isAuthor = false;
 
   PublicBlog({
       this.publicBlogId,
@@ -21,5 +22,7 @@ class PublicBlog{
       this.publicBlogDate,
       this.publicBlogText,
       this.publicBlogLikes,
-      this.publicBlogCurrentUserLiked});
+      this.publicBlogCurrentUserLiked,
+      this.isAuthor
+  });
 }

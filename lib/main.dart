@@ -1,6 +1,8 @@
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
 import 'package:allay/screens/public_blog/public_blog_view_screen.dart';
+import 'package:allay/screens/user_blog/edit_blog_screen.dart';
 import 'package:allay/screens/user_blog/user_blog_view_screen.dart';
+import 'package:allay/screens/user_data/edit_profile_page.dart';
 import 'package:allay/screens/user_data/signup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,6 @@ Future<void> main() async{
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -51,7 +52,9 @@ class MyApp extends StatelessWidget {
           PublicBlogViewScreen.routeName: (ctx)=> PublicBlogViewScreen(),
           MyHomePage.routeName: (ctx)=> MyHomePage(tabNumber: 0,),
           SignUp.routename: (ctx)=> SignUp(),
-          LoginPage.routename: (ctx)=> LoginPage()
+          LoginPage.routename: (ctx)=> LoginPage(),
+          UserAccountEditScreen.routename: (ctx)=> UserAccountEditScreen(),
+          EditBlogScreen.routeName: (ctx)=> EditBlogScreen()
           // PublicBlogViewScreen.
         },
         home: signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),

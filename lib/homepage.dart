@@ -1,8 +1,12 @@
+import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/user_data/user_data_model.dart';
 import 'package:allay/screens/user_blog/add_blog_screen.dart';
 import 'package:allay/screens/user_blog/user_blogs_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'providers/public_blog/public_blogs_provider.dart';
 import 'screens/public_blog/public_blogs_screen.dart';
 import 'screens/user_data/user_profile_page.dart';
 
@@ -22,9 +26,17 @@ class _MyHomePageState extends State<MyHomePage> {
   GlobalKey _bottomNavigationKey = GlobalKey();
   @override
   void initState() {
+    // Future.delayed(Duration.zero).then((_) {
+    //    Provider.of<UserData>(context,listen: false).fetchUser();
+    //    // Provider.of<PublicBlogs>(context,listen: false).fetchSavedBlogs();
+    // });
     // TODO: implement initState
+    fetch();
     selectedTab = widget.tabNumber;
     super.initState();
+  }
+  void fetch()async{
+    await Provider.of<UserData>(context,listen: false).fetchUser();
   }
   @override
   Widget build(BuildContext context) {
@@ -52,13 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           letIndexChange: (index) => true,
         ),
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Allay',style: TextStyle(
-              color: Colors.white,
-              fontSize: 24
-          ),),
-        ),
+        appBar: mainAppBar(),
         body: tabsWidget()
 
     );

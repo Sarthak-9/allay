@@ -10,6 +10,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'edit_profile_page.dart';
+
 class UserProfilePage extends StatefulWidget {
   @override
   _UserProfilePageState createState() => _UserProfilePageState();
@@ -41,15 +43,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
       setState(() {
         _isLoading = true;
       });
-      // var _userID = _auth.currentUser.uid;
-      // var _user =_auth.currentUser;
       await Provider.of<UserData>(context,listen: false).fetchUser();
       var currentUser = Provider.of<UserData>(context,listen: false).userData;
       _username = currentUser.userName;
       _userEmailId = currentUser.userEmail;
       _userPhone = currentUser.userPhone;
       _userDob = currentUser.dateofBirth;
-      _userProfilePhoto = currentUser.profilePhotoLink;
+      _userProfilePhoto = currentUser.profilePhotoLink!=null?currentUser.profilePhotoLink:null;
     }
     // _userDob = _userProfile['userDOB'];
     setState(() {
@@ -84,144 +84,154 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ),
       ) :
       _loggedIn ?
-      Column(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            'My Profile',
-            style: TextStyle(
-                fontSize: 30.0,
-                fontFamily: 'Libre Baskerville'
-              //color: Colors.white
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
             ),
-            textAlign: TextAlign.left,
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          CircleAvatar(
-            // backgroundImage: loadedBirthday.imageofPerson == null
-
-            backgroundImage: _userProfilePhoto != null? NetworkImage(_userProfilePhoto) :   AssetImage('assets/images/userimage.png'),
-            //: FileImage(loadedBirthday.imageofPerson),
-            radius: MediaQuery.of(context).size.width * 0.18,
-          ),
-
-          SizedBox(height: 20,),
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                    color: Colors.black54
-                )
+            Text(
+              'My Profile',
+              style: TextStyle(
+                  fontSize: 30.0,
+                  fontFamily: 'Libre Baskerville'
+                //color: Colors.white
+              ),
+              textAlign: TextAlign.left,
             ),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: Icon(
-                    Icons.person_outline_rounded,
-                    color: themeColor,
-                    size: 28.0,
-                  ),
-                  title: Text('Name',textAlign: TextAlign.left,
-                    textScaleFactor: 1.3,
-                    style: TextStyle(
-                      color: themeColor,
-                    ),),
-                  subtitle: Text(
-                    _username,
-                    //textScaleFactor: 1.4,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  // decoration: BoxDecoration(
-                  //     // border: Borde
-                  //     // Border.all(
-                  //     //
-                  //     //     color: Colors.black54
-                  //     // )
-                  // ),
-                  child: ListTile(
+            SizedBox(
+              height: 24,
+            ),
+            CircleAvatar(
+              backgroundImage: _userProfilePhoto != null? NetworkImage(_userProfilePhoto) :   AssetImage('assets/images/userimage.png'),
+              //: FileImage(loadedBirthday.imageofPerson),
+              radius: MediaQuery.of(context).size.width * 0.18,
+            ),
+
+            SizedBox(height: 20,),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                      color: Colors.black54
+                  )
+              ),
+              child: Column(
+                children: [
+                  ListTile(
                     leading: Icon(
-                      Icons.calendar_today_rounded,
+                      Icons.person_outline_rounded,
                       color: themeColor,
                       size: 28.0,
                     ),
-                    title: Text('Birth Date',textAlign: TextAlign.left,
+                    title: Text('Name',textAlign: TextAlign.left,
                       textScaleFactor: 1.3,
                       style: TextStyle(
                         color: themeColor,
                       ),),
-                    subtitle: _userDob!=null
-                        ? Text(
-                      DateFormat('dd / MM / yyyy')
-                          .format(_userDob),
+                    subtitle: Text(
+                      _username,
                       //textScaleFactor: 1.4,
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
-                    )
-                        : Text('None'),
+                    ),
                   ),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.account_circle_rounded,
-                    color: themeColor,
-                    size: 28.0,
+                  SizedBox(
+                    height: 5,
                   ),
-                  title: Text('Email',textAlign: TextAlign.left,
-                    textScaleFactor: 1.3,
-                    style: TextStyle(
+                  Container(
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.calendar_today_rounded,
+                        color: themeColor,
+                        size: 28.0,
+                      ),
+                      title: Text('Birth Date',textAlign: TextAlign.left,
+                        textScaleFactor: 1.3,
+                        style: TextStyle(
+                          color: themeColor,
+                        ),),
+                      subtitle: _userDob!=null
+                          ? Text(
+                        DateFormat('dd / MM / yyyy')
+                            .format(_userDob),
+                        //textScaleFactor: 1.4,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                          : Text('None'),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.account_circle_rounded,
                       color: themeColor,
-                    ),),
-                  subtitle: Text(
-                    _userEmailId,
-                    //textScaleFactor: 1.4,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
+                      size: 28.0,
+                    ),
+                    title: Text('Email',textAlign: TextAlign.left,
+                      textScaleFactor: 1.3,
+                      style: TextStyle(
+                        color: themeColor,
+                      ),),
+                    subtitle: Text(
+                      _userEmailId,
+                      //textScaleFactor: 1.4,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                // Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
-                ListTile(
-                  leading: Icon(
-                    Icons.phone,
-                    color: themeColor,
-                    size: 28.0,
-                  ),
-                  title: Text('Phone',textAlign: TextAlign.left,
-                    textScaleFactor: 1.3,
-                    style: TextStyle(
+                  // Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
+                  ListTile(
+                    leading: Icon(
+                      Icons.phone,
                       color: themeColor,
-                    ),),
-                  subtitle: Text(
-                    _userPhone!=null?_userPhone:'None',
-                    //textScaleFactor: 1.4,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
+                      size: 28.0,
+                    ),
+                    title: Text('Phone',textAlign: TextAlign.left,
+                      textScaleFactor: 1.3,
+                      style: TextStyle(
+                        color: themeColor,
+                      ),),
+                    subtitle: Text(
+                      _userPhone!=null?_userPhone:'None',
+                      //textScaleFactor: 1.4,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                ],
+              ),
+            ),
+            SizedBox(height: 24,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                MaterialButton(
+                  elevation: 0,
+                  // minWidth: double.maxFinite,
+                  // height: 50,
+                  onPressed: (){
+                    Navigator.of(context).pushNamed(UserAccountEditScreen.routename);
+                  },
+                  color: Colors.teal,
+                  child:Text('Edit Profile',
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                  textColor: Colors.white,
+                ),
+                MaterialButton(
+                  elevation: 0,
+                  // minWidth: double.maxFinite,
+                  // height: 50,
+                  onPressed: logoutUser,
+                  color: Colors.teal,
+                  child:_loggingOut? CircularProgressIndicator(): Text('   Logout   ',
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                  textColor: Colors.white,
                 ),
               ],
             ),
-          ),
-          SizedBox(height: 24,),
-          MaterialButton(
-            elevation: 0,
-            // minWidth: double.maxFinite,
-            height: 50,
-            onPressed: logoutUser,
-            color: Colors.green,
-            child:_loggingOut? CircularProgressIndicator(): Text('Logout',
-                style: TextStyle(color: Colors.white, fontSize: 16)),
-            textColor: Colors.white,
-          ),
-        ],
+          ],
+        ),
       ):UserNotLoggedIn(),
     );
   }
@@ -230,8 +240,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Logging out'),
-        content: Text('Are you sure you want to Logout from YourDay'),
+        content: Text('Are you sure you want to logout'),
         actions: <Widget>[
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
           TextButton(
             child: Text('Yes'),
             onPressed: () {
@@ -239,12 +255,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
               Navigator.of(ctx).pop();
             },
           ),
-          TextButton(
-            child: Text('No'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
         ],
       ),
     );
@@ -255,13 +265,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
       FirebaseAuth _auth = FirebaseAuth.instance;
       await _auth.signOut();
       await storage.write(key: "signedIn",value: "false");
-
-      // await Constants.prefs.setBool("loggedIn", false);
       setState(() {
         _loggingOut = false;
       });
-      // Navigator.of(context).
-      Navigator.of(context).pushReplacementNamed(LoginPage.routename);
+      Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routename, (route) => false);
     }
   }
 }

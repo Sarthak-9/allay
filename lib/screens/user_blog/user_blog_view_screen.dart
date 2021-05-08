@@ -1,9 +1,12 @@
 import 'package:allay/providers/contants.dart';
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sentiment_dart/sentiment_dart.dart';
+
+import '../../homepage.dart';
 
 class UserBlogViewScreen extends StatefulWidget {
   static const routeName = '/user-blog-view-screen';
@@ -13,19 +16,15 @@ class UserBlogViewScreen extends StatefulWidget {
 }
 
 class _UserBlogViewScreenState extends State<UserBlogViewScreen> {
+  int analysisScore = 0;
   @override
   Widget build(BuildContext context) {
     var userBlogId = ModalRoute.of(context).settings.arguments as String;
     var userBlog = Provider.of<UserBlogs>(context).findUserBlogById(userBlogId);
     var imageUrl = userBlog.userBlogImageUrl;
+    analysisScore =int.parse(userBlog.userBlogAnalysisReport);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Allay',style: TextStyle(
-            color: Colors.white,
-            fontSize: 24
-        ),),
-      ),
+      appBar: mainAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -65,9 +64,17 @@ class _UserBlogViewScreenState extends State<UserBlogViewScreen> {
                   ),
                 ),
                 Divider(),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
-                    height: MediaQuery.of(context).size.height *0.44,
-                    child: Text(userBlog.userBlogText)
+                    // height: MediaQuery.of(context).size.height *0.44,
+                    child: Text(userBlog.userBlogText,style: TextStyle(
+                      fontSize: 22,
+                    ),)
+                ),
+                SizedBox(
+                  height: 50,
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.8,
@@ -85,21 +92,44 @@ class _UserBlogViewScreenState extends State<UserBlogViewScreen> {
                         SizedBox(
                           height: 20,
                         ),
+                        Padding(
+                            padding:const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(9),
+                                  border: Border.all(
+                                      color: Theme.of(context).primaryColor, width: 0.7)),
+                              child: FAProgressBar(
+                                currentValue:analysisScore>=0? analysisScore : -analysisScore,
+                                // displayText: '%',
+                                direction: Axis.horizontal,
+                                // backgroundColor: Colors.red,
+                                progressColor: analysisScore>=0?Colors.green : Colors.red,
+                              ),
+                            )),
+                        SizedBox(height: 20,),
                         Text(
                           'Your score is : ${userBlog.userBlogAnalysisReport}',
                           style: TextStyle(fontSize: 16),
                         ),
                         SizedBox(height: 20,),
-                        // ElevatedButton(
-                        //   onPressed: () {},
-                        //   child: Text('Analyze Again'),
-                        //   style: ButtonStyle(
-                        //       backgroundColor: MaterialStateProperty.all(Colors.teal)),
-                        // ),
                       ],
                     ),
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: ElevatedButton(
+                    onPressed: ()=>deleteBlog(userBlogId),
+                    child: Text('Delete Blog'),
+                    style: ButtonStyle(
+                        backgroundColor:
+                        MaterialStateProperty.all(Colors.teal)),
+                  ),
+                ),
               ],
             ),
           ),
@@ -107,14 +137,36 @@ class _UserBlogViewScreenState extends State<UserBlogViewScreen> {
       )
     );
   }
-  // void analyzeBlog() {
-  //   if (userB) {
-  //     var blogText = _blogtextController.text;
-  //     final sentiment = Sentiment();
-  //     analysisReport = sentiment.analysis(blogText);
-  //     print(analysisReport);
-  //     analysisScore = analysisReport['score'].toString();
-  //     setState(() {});
-  //   }
-  // }
+  void deleteBlog(String blogId) async {
+    bool deleteStatus = false;
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text('Do you want to delete this blog?.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              deleteStatus = false;
+              Navigator.of(ctx).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () {
+              deleteStatus = true;
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    );
+    if(deleteStatus){
+      await Provider.of<UserBlogs>(context,listen: false).deleteBlog(blogId);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MyHomePage(tabNumber: 1,)));      // Navigator.of(context).p
+    }
+    return;
+  }
 }
