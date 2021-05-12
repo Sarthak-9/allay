@@ -97,7 +97,7 @@ Color getMoodColorFromNumber(int mood){
   }
 }
 
-AppBar mainAppBar(){
+AppBar MainAppBar(){
   return AppBar(
     backgroundColor: const Color(0xFFf8fefe),
     elevation:3.0,

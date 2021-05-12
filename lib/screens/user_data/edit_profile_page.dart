@@ -23,6 +23,7 @@ class UserAccountEditScreen extends StatefulWidget {
 }
 
 class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
+  final formkey = GlobalKey<FormState>();
   String _username=' ';
   String _userEmailId=' ';
   String _userPhone = ' ';
@@ -98,7 +99,7 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
   Widget build(BuildContext context) {
     final themeColor = Theme.of(context).primaryColor;
     return Scaffold(
-      appBar: mainAppBar(),
+      appBar: MainAppBar(),
       body: SingleChildScrollView(
         child: Container(
           // alignment: Alignment.center,
@@ -231,11 +232,9 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
                               lastDate: DateTime(DateTime.now().year + 2),
                               builder: (context, child) => Theme(
                                 data: ThemeData.light().copyWith(
-                                  primaryColor:
-                                  Colors.red, //const Color(0xFF8CE7F1),
-                                  accentColor: const Color(0xFF8CE7F1),
                                   colorScheme: ColorScheme.light(
-                                      primary: const Color(0xFF8CE7F1)),
+                                    primary: Theme.of(context).primaryColor,
+                                  ),
                                   buttonTheme: ButtonThemeData(
                                       textTheme: ButtonTextTheme.primary),
                                 ),
@@ -270,22 +269,30 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
                       ),
                     ),
                     // Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
-                    ListTile(
-                      leading: Icon(
-                        Icons.phone,
-                        color: themeColor,
-                        size: 28.0,
-                      ),
-                      title: TextFormField(
-                        // initialValue: _userPhone==null ? '': _userPhone,
-                        controller: userPhoneController,
-                        keyboardType: TextInputType.phone,
-                      ),
-                      subtitle: Text(
-                        _userPhone!=null?_userPhone:'None',
-                        //textScaleFactor: 1.4,
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
+                    Form(
+                      key: formkey,
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.phone,
+                          color: themeColor,
+                          size: 28.0,
+                        ),
+                        title: TextFormField(
+                          // initialValue: _userPhone==null ? '': _userPhone,
+                          controller: userPhoneController,
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value.length !=10) {
+                              return 'Enter valid phone number';
+                            }
+                            return null;
+                          },                      ),
+                        subtitle: Text(
+                          _userPhone!=null?_userPhone:'None',
+                          //textScaleFactor: 1.4,
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ],
@@ -309,6 +316,10 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
   }
 
   void updateProfile()async{
+    var isValid = formkey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
     var phoneNumber = userPhoneController.text;
     if(userPhoneController.text.isEmpty){
       phoneNumber = _userPhone;

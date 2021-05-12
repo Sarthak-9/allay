@@ -258,9 +258,9 @@ class PublicBlogs with ChangeNotifier {
     var querySnapshot = await firestoreInstance.collection("publicblogs").doc(blogId).delete();
   }
 
-  List<PublicBlog> sortByMood(String mood){
+  Future<List<PublicBlog>> sortByMood(String mood)async{
     List<PublicBlog> sortMood = [];
-    _publicBlogList.forEach((blog) {
+     _publicBlogList.forEach((blog) {
       if(blog.publicBlogMood == mood) {
         sortMood.add(blog);
       }

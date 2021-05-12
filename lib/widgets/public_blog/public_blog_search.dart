@@ -10,12 +10,14 @@ class BlogSearch extends SearchDelegate<String> {
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [IconButton(
-      icon: Icon(Icons.clear),
-      onPressed: () {
-        query = "";
-      },
-    )];
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+        },
+      )
+    ];
     throw UnimplementedError();
   }
 
@@ -41,26 +43,30 @@ class BlogSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final List<PublicBlog> suggestionList = query.isEmpty? [] : searchBlog.where((blog) {
-    return blog.publicBlogTitle.toLowerCase().contains(query.toLowerCase())||blog.authorUserName.toLowerCase().contains(query.toLowerCase());
-    }).toList();
+    final List<PublicBlog> suggestionList = query.isEmpty
+        ? []
+        : searchBlog.where((blog) {
+            return blog.publicBlogTitle
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                blog.authorUserName.toLowerCase().contains(query.toLowerCase());
+          }).toList();
     // return ListView.builder(itemBuilder: (ctx, i) => ListTile());
     return GridView.builder(
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2),
-    physics: ScrollPhysics(),
-    shrinkWrap: true,
-    itemCount: suggestionList.length,
-    itemBuilder: (ctx, i) => PublicBlogGridWidget(
-    publicBlogId: suggestionList[i].publicBlogId,
-    publicBlogTitle: suggestionList[i].publicBlogTitle,
-    publicBlogText: suggestionList[i].publicBlogText,
-    ),
-    // child: FestivalWidget(),
-    // child: ListView.builder(itemBuilder: (){}),
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: suggestionList.length,
+      itemBuilder: (ctx, i) => PublicBlogGridWidget(
+        publicBlogId: suggestionList[i].publicBlogId,
+        publicBlogTitle: suggestionList[i].publicBlogTitle,
+        publicBlogText: suggestionList[i].publicBlogText,
+      ),
+      // child: FestivalWidget(),
+      // child: ListView.builder(itemBuilder: (){}),
     );
     // TODO: implement buildSuggestions
     throw UnimplementedError();
   }
-
 }

@@ -24,7 +24,7 @@ class _UserBlogViewScreenState extends State<UserBlogViewScreen> {
     var imageUrl = userBlog.userBlogImageUrl;
     analysisScore =int.parse(userBlog.userBlogAnalysisReport);
     return Scaffold(
-      appBar: mainAppBar(),
+      appBar: MainAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

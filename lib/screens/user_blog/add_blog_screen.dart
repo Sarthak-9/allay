@@ -285,7 +285,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           textCapitalization: TextCapitalization.sentences,
                           validator: (value) {
                             if (value.length < 50) {
-                              return 'Blog should be  characters long';
+                              return 'Blog is not long enough';
                             }
                             return null;
                           },
@@ -358,12 +358,6 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          // ElevatedButton(
-                          //   onPressed: () {},
-                          //   child: Text('Analyze Again'),
-                          //   style: ButtonStyle(
-                          //       backgroundColor: MaterialStateProperty.all(Colors.teal)),
-                          // ),
                         ],
                       ),
                     ),

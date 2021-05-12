@@ -26,10 +26,6 @@ class _MyHomePageState extends State<MyHomePage> {
   GlobalKey _bottomNavigationKey = GlobalKey();
   @override
   void initState() {
-    // Future.delayed(Duration.zero).then((_) {
-    //    Provider.of<UserData>(context,listen: false).fetchUser();
-    //    // Provider.of<PublicBlogs>(context,listen: false).fetchSavedBlogs();
-    // });
     // TODO: implement initState
     fetch();
     selectedTab = widget.tabNumber;
@@ -64,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           letIndexChange: (index) => true,
         ),
-        appBar: mainAppBar(),
+        appBar: MainAppBar(),
         body: tabsWidget()
 
     );

@@ -54,7 +54,7 @@ class _EditBlogScreenState extends State<EditBlogScreen> {
   Widget build(BuildContext context) {
     Color borderColor = Theme.of(context).primaryColor;
     return Scaffold(
-      appBar: mainAppBar(),
+      appBar: MainAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

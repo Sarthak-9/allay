@@ -29,7 +29,7 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
     photoUrl = publicBlog.authorImageUrl;
     likedStatus = publicBlog.publicBlogCurrentUserLiked;
     return Scaffold(
-      appBar:  mainAppBar(),
+      appBar:  MainAppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

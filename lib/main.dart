@@ -1,5 +1,6 @@
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
 import 'package:allay/screens/public_blog/public_blog_view_screen.dart';
+import 'package:allay/screens/public_blog/show_all_blogs.dart';
 import 'package:allay/screens/user_blog/edit_blog_screen.dart';
 import 'package:allay/screens/user_blog/user_blog_view_screen.dart';
 import 'package:allay/screens/user_data/edit_profile_page.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx)=>UserData()),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Allay',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: const Color(0xFF2C3E50),
@@ -54,7 +55,8 @@ class MyApp extends StatelessWidget {
           SignUp.routename: (ctx)=> SignUp(),
           LoginPage.routename: (ctx)=> LoginPage(),
           UserAccountEditScreen.routename: (ctx)=> UserAccountEditScreen(),
-          EditBlogScreen.routeName: (ctx)=> EditBlogScreen()
+          EditBlogScreen.routeName: (ctx)=> EditBlogScreen(),
+          ShowAllBlogs.routeName: (ctx)=> ShowAllBlogs(blogtype: 2,),
           // PublicBlogViewScreen.
         },
         home: signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),

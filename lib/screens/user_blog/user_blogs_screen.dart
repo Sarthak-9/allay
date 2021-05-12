@@ -1,6 +1,7 @@
 import 'package:allay/models/user_blog/user_blog_model.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
+import 'package:allay/screens/public_blog/show_all_blogs.dart';
 import 'package:allay/widgets/public_blog/public_blog_grid_widget.dart';
 import 'package:allay/widgets/user_blog/user_blog_search.dart';
 import 'package:allay/widgets/user_blog/user_blog_widget.dart';
@@ -172,12 +173,27 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    ' My Saved Blogs',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.teal,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        ' My Saved Blogs',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: (){
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => ShowAllBlogs(blogtype: 1,)));
+                        },
+                        child: Text('Show All',style: TextStyle(
+                            color: Colors.blue
+                        ),),
+
+                      ),
+                    ],
                   ),
                   Divider(),
                   SizedBox(
@@ -209,12 +225,27 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    ' My Public Blogs',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.teal,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        ' My Public Blogs',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      TextButton(
+                          onPressed: (){
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => ShowAllBlogs(blogtype: 2,)));
+                          },
+                          child: Text('Show All',style: TextStyle(
+                            color: Colors.blue
+                          ),),
+
+                      ),
+                    ],
                   ),
                   Divider(),
                   //
@@ -275,7 +306,7 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                                 ' Search Blogs',
                                 style: TextStyle(
                                   fontSize: 16.0,
-                                    fontWeight: FontWeight.w800
+                                    fontWeight: FontWeight.w600
                                 ),
                               ),
                             ],
@@ -320,9 +351,9 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                           }else {
                             sortByMood(mood);
                           }
-                          // setState(() {
-                          //
-                          // });
+                          setState(() {
+
+                          });
                         },
                       ),
                     ],

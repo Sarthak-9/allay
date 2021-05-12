@@ -18,6 +18,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
   bool isLoading = false;
   List<PublicBlog> sortedMood = [];
   bool isMoodSorted = false;
+  bool isSorting = false;
 
   @override
   void initState() {
@@ -25,7 +26,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
       isLoading = true;
     });
     fetch();
-    _isSearching = false;
+    // _isSearching = false;
     // TODO: implement initState
     super.initState();
   }
@@ -71,10 +72,13 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
     await Provider.of<PublicBlogs>(context, listen: false).fetchBlogs();
   }
 
-  void sortByMood(String mood) {
-    sortedMood = Provider.of<PublicBlogs>(context, listen: false).sortByMood(mood);
+  void sortByMood(String mood)async {
+    sortedMood =await Provider.of<PublicBlogs>(context, listen: false).sortByMood(mood);
+    await Future.delayed(Duration(seconds: 1)).then((value) => print('Abs'));
+    isMoodSorted = true;
+    isSorting = false;
     setState(() {
-      isMoodSorted = true;
+
     });
   }
 
@@ -125,7 +129,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                                 ' Search Blogs',
                                 style: TextStyle(
                                   fontSize: 18.0,
-                                    fontWeight: FontWeight.w800
+                                    fontWeight: FontWeight.w600
                                 ),
                               ),
                             ],
@@ -162,6 +166,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                           // String displayMood='';
                           setState(() {
                             _chosenValue = mood;
+                            isSorting = true;
                           });
                           if(mood == 'No Filters'){
                             // displayMood = 'Sort by Category';
@@ -171,6 +176,9 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                             // displayMood = mood;
                             sortByMood(mood);
                           }
+                          setState(() {
+
+                          });
                         },
                       ),
                     ],
@@ -179,7 +187,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  isMoodSorted?
+                  isSorting?CircularProgressIndicator():isMoodSorted?
                   sortedMood!=null && sortedMood.isNotEmpty?
                   ListView.builder(
                     physics: ScrollPhysics(),
