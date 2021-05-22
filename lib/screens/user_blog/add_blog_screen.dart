@@ -11,6 +11,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:flutter_quill/widgets/controller.dart';
+import 'package:flutter_quill/widgets/editor.dart';
+import 'package:flutter_quill/widgets/toolbar.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:sentiment_dart/sentiment_dart.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +31,11 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   var sentiment = Sentiment();
   final _blogtitleController = TextEditingController();
   final _blogtextController = TextEditingController();
+  // QuillController _controller = QuillController.basic();
+  List<String> _selectedTags = [];
+  final _items = tagList
+      .map((inter) => MultiSelectItem<String>(inter, inter))
+      .toList();
   bool _dateSelected = false;
   DateTime dateTime;
   File photoOfTheDay = null;
@@ -38,7 +47,9 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   @override
   Widget build(BuildContext context) {
     Color borderColor = Theme.of(context).primaryColor;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -84,7 +95,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       onPressed: () {
                         setMood(1);
                       },
-                      child: Text('Happy'),
+                      child: Text('HAPPY'),
                       style: ButtonStyle(
                           minimumSize: MaterialStateProperty.resolveWith((states) => Size(80.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
@@ -96,7 +107,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       onPressed: () {
                         setMood(2);
                       },
-                      child: Text('Excited'),
+                      child: Text('EXCITED'),
                       style: ButtonStyle(
                           minimumSize: MaterialStateProperty.resolveWith((states) => Size(80.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
@@ -109,7 +120,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       onPressed: () {
                         setMood(3);
                       },
-                      child: Text('Angry'),
+                      child: Text('ANGRY'),
                       style: ButtonStyle(
                           minimumSize: MaterialStateProperty.resolveWith((states) => Size(80.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
@@ -127,7 +138,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       onPressed: () {
                         setMood(4);
                       },
-                      child: Text('Sad'),
+                      child: Text('SAD'),
                       style: ButtonStyle(
                           minimumSize: MaterialStateProperty.resolveWith((states) => Size(90.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
@@ -139,7 +150,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       onPressed: () {
                         setMood(5);
                       },
-                      child: Text('Depressed'),
+                      child: Text('DEPRESSED'),
                       style: ButtonStyle(
                         minimumSize: MaterialStateProperty.resolveWith((states) => Size(90.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
@@ -151,7 +162,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       onPressed: () {
                         setMood(6);
                       },
-                      child: Text('Neutral'),
+                      child: Text('NEUTRAL'),
                       style: ButtonStyle(
                           minimumSize: MaterialStateProperty.resolveWith((states) => Size(90.0,35.0)),
                           backgroundColor: MaterialStateProperty.all(
@@ -273,6 +284,18 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       SizedBox(
                         height: 20,
                       ),
+                      // Container(
+                      //     height: 100,
+                      //     child: QuillToolbar.basic(controller: _controller)),
+                      // Container(
+                      //   height: 500,
+                      //   child: Expanded(
+                      //     child: QuillEditor.basic(
+                      //       controller: _controller,
+                      //       readOnly: false, // true for view only mode
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         // height: MediaQuery.of(context).size.height *0.6,
                         alignment: Alignment.center,
@@ -292,11 +315,62 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           maxLines:
                           (MediaQuery.of(context).size.height * 0.025).toInt(),
                           textAlign: TextAlign.center,
-                          decoration: InputDecoration(hintText: 'Write here'),
+                          decoration: InputDecoration(hintText: 'Write here',border: InputBorder.none),
                         ),
                       ),
                       SizedBox(
                         height: 20,
+                      ),
+                      MultiSelectBottomSheetField(
+                        searchTextStyle: TextStyle(
+                          color: Colors.black,
+                        ),
+                        listType: MultiSelectListType.CHIP,
+                        itemsTextStyle: TextStyle(
+                          color: Colors.black,
+                        ),
+                        validator: (values){
+                          if(values == null || values.length<=5)
+                            return null;
+                          return 'Choose max 5 tags only';
+                        },
+                        autovalidateMode: AutovalidateMode.always,
+                        selectedItemsTextStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                        // searchable: true,
+                        items: _items,
+                        title: Text("Tags", style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),),
+                        selectedColor: Colors.teal,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(
+                            color: Theme.of(context).primaryColor,
+                            width: 2,
+                          ),
+                        ),
+
+                        buttonIcon: Icon(
+                          Icons.category,
+                          color: Colors.teal,
+                        ),
+                        buttonText: Text(
+                          "Tags",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ),
+                        onConfirm: (results) {
+                          _selectedTags = results;
+                        },
+
+                        // maxChildSize: 0.8,
+                        // initialChildSize: 0.6,
                       ),
                     ],
                   ),
@@ -311,6 +385,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                     onPressed: analyzeBlog,
                     child: Text('Analyze your mood'),
                     style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(3),
                         backgroundColor:
                             MaterialStateProperty.all(Colors.teal)),
                   ),
@@ -370,15 +445,21 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: publishAsPrivate,
-                      child: Text('Publish as Personal'),
+                      child: Text('Publish as Personal',style: TextStyle(
+                        color: Colors.white,
+                      ),),
                       style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(3),
                           backgroundColor:
                               MaterialStateProperty.all(Colors.teal)),
                     ),
                     ElevatedButton(
                       onPressed: publishAsPublic,
-                      child: Text('   Publish as Public   '),
+                      child: Text('   Publish as Public   ',style: TextStyle(
+                        color: Colors.white,
+                      ),),
                       style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(3),
                           backgroundColor:
                               MaterialStateProperty.all(Colors.teal)),
                     ),

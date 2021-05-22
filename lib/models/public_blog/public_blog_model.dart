@@ -1,4 +1,6 @@
 
+import 'package:allay/models/user_data/user_data_model.dart';
+
 class PublicBlog{
   final String publicBlogId;
   final String publicBlogTitle;
@@ -11,6 +13,7 @@ class PublicBlog{
   final List<String> publicBlogLikes;
   bool publicBlogCurrentUserLiked;
   bool isAuthor = false;
+  UserDataModel authorDetails;
 
   PublicBlog({
       this.publicBlogId,
@@ -23,6 +26,7 @@ class PublicBlog{
       this.publicBlogText,
       this.publicBlogLikes,
       this.publicBlogCurrentUserLiked,
-      this.isAuthor
+      this.isAuthor,
+      this.authorDetails
   });
 }

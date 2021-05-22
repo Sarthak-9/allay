@@ -3,43 +3,43 @@ import 'package:flutter/material.dart';
 String getMoodText(int moodNumber){
   switch(moodNumber){
     case 1:
-      return 'Happy';
+      return 'HAPPY';
       break;
     case 2:
-      return 'Excited';
+      return 'EXCITED';
       break;
       case 3:
-    return 'Angry';
+    return 'ANGRY';
     break;
     case 4:
-    return 'Sad';
+    return 'SAD';
     break;
     case 5:
-    return 'Depressed';
+    return 'DEPRESSED';
     break;
     default :
-      return 'Neutral';
+      return 'NEUTRAL';
   }
 }
 
 Color getMoodColor(String mood){
   switch(mood){
-    case 'Happy':
+    case 'HAPPY':
       return Color(0xFFD4860B);
       break;
-    case 'Excited':
+    case 'EXCITED':
       return Color(0xFF149A80);
       break;
-    case 'Angry':
+    case 'ANGRY':
       return Color(0xFFE12E1C);
       break;
-    case 'Sad':
+    case 'SAD':
       return Color(0xFF1E2B37);
       break;
-    case 'Depressed':
+    case 'DEPRESSED':
       return Color(0xFF809395);
       break;
-    case 'Neutral':
+    case 'NEUTRAL':
       return Colors.blue;
       break;
     default :
@@ -49,22 +49,22 @@ Color getMoodColor(String mood){
 
   int getMoodNumber(String mood){
   switch(mood){
-    case 'Happy':
+    case 'HAPPY':
       return 1;
       break;
-    case 'Excited':
+    case 'EXCITED':
       return 2;
       break;
-    case 'Angry':
+    case 'ANGRY':
       return 3;
       break;
-    case 'Sad':
+    case 'SAD':
       return 4;
       break;
-    case 'Depressed':
+    case 'DEPRESSED':
       return 5;
       break;
-    case 'Neutral':
+    case 'NEUTRAL':
       return 6;
       break;
     default :
@@ -92,21 +92,26 @@ Color getMoodColorFromNumber(int mood){
     case 6:
       return Colors.blue;
       break;
-    default :
+      default :
       return Colors.blue;
   }
 }
 
 AppBar MainAppBar(){
   return AppBar(
-    backgroundColor: const Color(0xFFf8fefe),
+    // backgroundColor: const Color(0xFFf8fefe),
+    backgroundColor: const Color(0xFF2C3E50),
     elevation:3.0,
     centerTitle: true,
     backwardsCompatibility: false,
     title: Text('Allay',style: TextStyle(
-        color: const Color(0xFF2C3E50),
+        color: Colors.white,
         fontSize: 26,
         fontFamily: 'Permanent Marker'
     ),),
   );
 }
+
+List<String> tagList = [
+  'Relationship','Family','Finance','Disease','Love','Emotions','Stress','Hygiene'
+];

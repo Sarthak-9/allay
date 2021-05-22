@@ -8,7 +8,10 @@ import 'package:provider/provider.dart';
 
 import 'providers/public_blog/public_blogs_provider.dart';
 import 'screens/public_blog/public_blogs_screen.dart';
+import 'screens/user_chat/post_question_screen.dart';
+import 'screens/user_chat/user_chat_view_screen.dart';
 import 'screens/user_data/user_profile_page.dart';
+import 'widgets/maindrawer.dart';
 
 class MyHomePage extends StatefulWidget {
   int tabNumber;
@@ -21,7 +24,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   int selectedTab = 0;
   GlobalKey _bottomNavigationKey = GlobalKey();
   @override
@@ -31,9 +33,11 @@ class _MyHomePageState extends State<MyHomePage> {
     selectedTab = widget.tabNumber;
     super.initState();
   }
-  void fetch()async{
-    await Provider.of<UserData>(context,listen: false).fetchUser();
+
+  void fetch() async {
+    await Provider.of<UserData>(context, listen: false).fetchUser();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,11 +46,31 @@ class _MyHomePageState extends State<MyHomePage> {
           index: selectedTab,
           height: 50.0,
           items: <Widget>[
-            Icon(Icons.note_rounded, size: 30,color: Colors.white,),
-            Icon(Icons.list, size: 30,color: Colors.white,),
-            Icon(Icons.add, size: 30,color: Colors.white,),
-            Icon(Icons.chat, size: 30,color: Colors.white,),
-            Icon(Icons.person_rounded, size: 30,color: Colors.white,),
+            Icon(
+              Icons.note_rounded,
+              size: 30,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.list,
+              size: 30,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.add,
+              size: 30,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.question_answer_rounded,
+              size: 30,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.person_rounded,
+              size: 30,
+              color: Colors.white,
+            ),
           ],
           color: const Color(0xFF2C3E50),
           // buttonBackgroundColor: Theme.of(context).primaryColor,
@@ -61,14 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
           letIndexChange: (index) => true,
         ),
         appBar: MainAppBar(),
-        body: tabsWidget()
-
-    );
+        drawer: MainDrawer(),
+        body: tabsWidget());
   }
+
   Widget tabsWidget() {
     switch (selectedTab) {
       case 0:
-        return AllBlogsScreen();//UserAllEventsScreen();
+        return AllBlogsScreen(); //UserAllEventsScreen();
 
       case 1:
         return UserBlogsScreen();
@@ -77,10 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
         return AddBlogScreen();
 
       case 3:
-        return Container();
-    //
+        return PostQuestionScreen();
+      //
       case 4:
-        return UserProfilePage();
+        return UserChatViewScreen();
 
       default:
         return Container();

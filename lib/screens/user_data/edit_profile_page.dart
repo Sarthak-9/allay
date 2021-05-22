@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_date_picker/platform_date_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:allay/models/user_data/user_data_model.dart';
 
 import '../../homepage.dart';
 

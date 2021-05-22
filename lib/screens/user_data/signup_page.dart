@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:allay/homepage.dart';
+import 'package:allay/models/user_data/user_data_model.dart';
 import 'package:allay/providers/user_data/user_data_model.dart';
 import 'package:allay/screens/user_data/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';

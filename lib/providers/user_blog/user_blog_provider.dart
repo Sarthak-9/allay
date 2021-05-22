@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:allay/models/user_blog/user_blog_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +21,7 @@ class UserBlogs with ChangeNotifier{
     if(newUserBlog.userBlogImage!=null){
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref =
-      storage.ref().child("userblogs").child(DateTime.now().toString());
+      storage.ref().child("userblogs").child(DateTime.now().toIso8601String());
       UploadTask uploadTask = ref.putFile(newUserBlog.userBlogImage);
       await uploadTask.whenComplete(() async {
         photoUrl = await ref.getDownloadURL();
@@ -83,6 +82,7 @@ class UserBlogs with ChangeNotifier{
     _userBlogList = loadedBlogs;
     notifyListeners();
   }
+
   void fetchRecentBlogs(){
     if(_userBlogList.length>7){
     for(int i=0;i<7;i++){

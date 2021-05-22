@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:allay/models/public_blog/public_blog_model.dart';
+import 'package:allay/models/user_data/user_data_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -17,7 +19,7 @@ class PublicBlogs with ChangeNotifier {
   List<String> _userLikedPost = [];
   List<String> _likedPostId = [];
   List<String> _userPublicBlogIdList = [];
-
+  UserDataModel authorDetails;
 
   List<PublicBlog> get publicBlogList => _publicBlogList;
   List<PublicBlog> get userPublicBlogList => _userPublicBlogList;
@@ -35,8 +37,8 @@ class PublicBlogs with ChangeNotifier {
           "authorUserName" : newPublicBlog.authorUserName,
           "publicBlogDate" : newPublicBlog.publicBlogDate.toIso8601String(),
           "publicBlogText": newPublicBlog.publicBlogText,
-          "publicBlogCurrentUserLiked": newPublicBlog.publicBlogCurrentUserLiked,
-          "authorImageUrl": newPublicBlog.authorImageUrl,
+          // "publicBlogCurrentUserLiked": newPublicBlog.publicBlogCurrentUserLiked,
+          // "authorImageUrl": newPublicBlog.authorImageUrl,
           "authorUserId": newPublicBlog.authorUserId,
           "publicBlogLikes":
           newPublicBlog.publicBlogLikes.map((like) => {
@@ -93,11 +95,10 @@ class PublicBlogs with ChangeNotifier {
           });
         }
       });
-      final querySnapshot = await firestoreInstance.collection("publicblogs")
-          .get();
-       querySnapshot.docs
-        .forEach((result){
+      final querySnapshot = await firestoreInstance.collection("publicblogs").get();
+        await Future.forEach(querySnapshot.docs,(result)async{
         bool likeStatus = _likedPostId.contains(result.id);
+          final UserDataModel author =  await fetchAuthorDetails(result.data()["authorUserId"]);
           PublicBlog loadedBlog = PublicBlog(
             publicBlogId: result.id,
             publicBlogTitle: result.data()["publicBlogTitle"],
@@ -106,13 +107,14 @@ class PublicBlogs with ChangeNotifier {
             publicBlogDate: DateTime.parse(result.data()["publicBlogDate"]),
             publicBlogText: result.data()["publicBlogText"],
             publicBlogCurrentUserLiked: likeStatus,
-            authorImageUrl: result.data()["authorImageUrl"],
+            authorImageUrl: author.profilePhotoLink,
             publicBlogLikes: (result.data()["publicBlogLikes"] as List<dynamic>)
                 .map((userid) =>
             userid as String)
                 .toList(),
             publicBlogMood: result.data()["publicBlogMood"],
             isAuthor: _userID == result.data()["authorUserId"],
+            authorDetails: author
           );
           loadedBlogs.add(loadedBlog);
         });
@@ -122,6 +124,28 @@ class PublicBlogs with ChangeNotifier {
     loadedBlogs.sort((a,b)=>b.publicBlogDate.compareTo(a.publicBlogDate));
     _publicBlogList = loadedBlogs;
     notifyListeners();
+  }
+
+  Future<UserDataModel> fetchAuthorDetails(String authorId) async {
+    UserDataModel _loadedUser;
+    final querySnapshot = await firestoreInstance.collection("userdata").doc(authorId).collection('userdetails')
+        .get(); //.then((querySnapshot) {
+    querySnapshot.docs
+        .forEach((result) {
+      var user = UserDataModel(
+        userFId: result.id,
+        userEmail: result.data()["userEmail"],
+        userPhone: result.data()["userPhone"],
+        userName: result.data()["userName"],
+        dateofBirth: result.data()["userDOB"] != null
+            ? DateTime.parse(result.data()["userDOB"])
+            : null,
+        profilePhotoLink: result.data()["profilePhotoLink"]!=null?result.data()["profilePhotoLink"]:null,
+      );
+      _loadedUser = user;
+    });
+    // authorDetails = _loadedUser;
+    return _loadedUser;
   }
 
   void saveBlog(String blogId)async{
@@ -224,11 +248,11 @@ class PublicBlogs with ChangeNotifier {
   Future<void> likePublicBlog(String blogId,bool currentUserLikeStatus)async{
     var _userID = _auth.currentUser.uid;
     var currentBLog = findPublicBlogById(blogId);
-    var likeBlogeRef = FirebaseDatabase.instance.reference().child(_userID).child('userlikedpost').child(blogId);
+    var likeBlogRef = FirebaseDatabase.instance.reference().child(_userID).child('userlikedpost').child(blogId);
     currentBLog.publicBlogCurrentUserLiked = currentUserLikeStatus;
     if (currentUserLikeStatus){
-      var likeBlogePushRef = likeBlogeRef.push();
-      await likeBlogePushRef.set({
+      var likeBlogPushRef = likeBlogRef.push();
+      await likeBlogPushRef.set({
         'blogId' : blogId
       });
       currentBLog.publicBlogLikes.add(_userID);
@@ -239,7 +263,7 @@ class PublicBlogs with ChangeNotifier {
           // notifyListeners();
     }else{
       _likedPostId.removeWhere((element) => element==blogId);
-      await likeBlogeRef.remove();
+      await likeBlogRef.remove();
       var removeRef = [];
       removeRef.add(_userID);
       currentBLog.publicBlogLikes.remove(_userID);

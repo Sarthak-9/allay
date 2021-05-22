@@ -3,35 +3,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-
-class UserDataModel with ChangeNotifier {
-  final String userFId;
-  final String userEmail;
-  final String userPhone;
-  final String userName;
-  final DateTime dateofBirth;
-  final String profilePhotoLink;
-  final File userProfileImage;
-  int averageHappinessIndex;
-  UserDataModel(
-      {this.userFId,
-      @required this.userEmail,
-      @required this.userPhone,
-      @required this.userName,
-      @required this.dateofBirth,
-      this.profilePhotoLink,
-        this.userProfileImage,
-      this.averageHappinessIndex});
-}
+import 'package:allay/models/user_data/user_data_model.dart';
 
 class UserData with ChangeNotifier {
   UserDataModel _userData;
   final firestoreInstance = FirebaseFirestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   UserDataModel get userData => _userData;
 
@@ -47,6 +26,7 @@ class UserData with ChangeNotifier {
         'userDOB': newUser.dateofBirth != null
             ? newUser.dateofBirth.toIso8601String()
             : null,
+        'userRole': 'user',
         "profilePhotoLink": newUser.profilePhotoLink,
       }).then((value) {
         // blogFirestoreId = value.id;
@@ -56,6 +36,7 @@ class UserData with ChangeNotifier {
           userEmail: newUser.userEmail,
           userPhone: newUser.userPhone,
           userName: newUser.userName,
+          userRole: 'user',
           dateofBirth: newUser.dateofBirth,
         profilePhotoLink: null
       );
@@ -68,14 +49,13 @@ class UserData with ChangeNotifier {
 
   Future<void> updateUser(UserDataModel updateUser) async {
     String photoUrl;
-    FirebaseAuth _auth = FirebaseAuth.instance;
     var _userID = _auth.currentUser.uid;
     var userFid = _userData.userFId;
     try {
       if(updateUser.userProfileImage!=null){
         FirebaseStorage storage = FirebaseStorage.instance;
         Reference ref =
-        storage.ref().child("userblogs").child(DateTime.now().toString());
+        storage.ref().child("userdata").child(DateTime.now().toIso8601String());
         UploadTask uploadTask = ref.putFile(updateUser.userProfileImage);
         await uploadTask.whenComplete(() async {
           photoUrl = await ref.getDownloadURL();
@@ -126,4 +106,19 @@ class UserData with ChangeNotifier {
     });
       _userData = _loadedUser;
   }
+
+  Future<void> updateUserRole(String userRole)async{
+    var _userID = _auth.currentUser.uid;
+    var userFid = _userData.userFId;
+    try{
+      await firestoreInstance.collection("userdata").doc(_userID).collection('userdetails').doc(userFid).update({
+        'userRole':userRole,
+      }).then((value) {
+        // blogFirestoreId = value.id;
+      });
+    }catch(error){
+
+    }
+  }
+
 }

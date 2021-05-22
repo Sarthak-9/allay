@@ -1,3 +1,4 @@
+import 'package:allay/models/user_chat/user_chat_model.dart';
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
 import 'package:allay/screens/public_blog/public_blog_view_screen.dart';
 import 'package:allay/screens/public_blog/show_all_blogs.dart';
@@ -5,6 +6,7 @@ import 'package:allay/screens/user_blog/edit_blog_screen.dart';
 import 'package:allay/screens/user_blog/user_blog_view_screen.dart';
 import 'package:allay/screens/user_data/edit_profile_page.dart';
 import 'package:allay/screens/user_data/signup_page.dart';
+import 'package:allay/screens/user_data/user_profile_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +16,10 @@ import 'package:provider/provider.dart';
 
 import 'homepage.dart';
 import 'providers/public_blog/public_blogs_provider.dart';
+import 'providers/user_chat/user_chat.dart';
 import 'providers/user_data/user_data_model.dart';
+import 'screens/public_blog/public_blog_author_profile_screen.dart';
+import 'screens/user_chat/user_question_reply_screen.dart';
 import 'screens/user_data/login_page.dart';
 
 var signin = false;
@@ -39,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx)=> PublicBlogs(),),
         ChangeNotifierProvider(create: (ctx)=>UserBlogs()),
         ChangeNotifierProvider(create: (ctx)=>UserData()),
+        ChangeNotifierProvider(create: (ctx)=>UserChat()),
       ],
       child: MaterialApp(
         title: 'Allay',
@@ -54,10 +60,12 @@ class MyApp extends StatelessWidget {
           MyHomePage.routeName: (ctx)=> MyHomePage(tabNumber: 0,),
           SignUp.routename: (ctx)=> SignUp(),
           LoginPage.routename: (ctx)=> LoginPage(),
+          UserProfilePage.routename:(ctx)=> UserProfilePage(),
           UserAccountEditScreen.routename: (ctx)=> UserAccountEditScreen(),
           EditBlogScreen.routeName: (ctx)=> EditBlogScreen(),
           ShowAllBlogs.routeName: (ctx)=> ShowAllBlogs(blogtype: 2,),
-          // PublicBlogViewScreen.
+          PublicBlogAuthorProfileScreen.routeName:(ctx)=>PublicBlogAuthorProfileScreen(),
+          UserQuestionReplyScreen.routeName: (ctx)=>UserQuestionReplyScreen()
         },
         home: signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),
       ),

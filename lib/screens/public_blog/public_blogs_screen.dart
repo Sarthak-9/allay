@@ -162,7 +162,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                               fontSize: 18,
                               fontWeight: FontWeight.w600),
                         ),
-                        onChanged: (String mood) {
+                        onChanged: (String mood)async {
                           // String displayMood='';
                           setState(() {
                             _chosenValue = mood;
@@ -172,6 +172,8 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                             // displayMood = 'Sort by Category';
                             isMoodSorted = false;
                             sortedMood.clear();
+                            await Future.delayed(Duration(seconds: 1)).then((value) => print('Abs'));
+                            isSorting = false;
                           }else {
                             // displayMood = mood;
                             sortByMood(mood);

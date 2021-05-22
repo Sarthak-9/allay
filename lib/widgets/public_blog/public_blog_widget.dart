@@ -1,5 +1,6 @@
 import 'package:allay/providers/contants.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
+import 'package:allay/screens/public_blog/public_blog_author_profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -61,6 +62,7 @@ class _PublicBlogWidgetState extends State<PublicBlogWidget> {
                fontSize: 22
              ),),
              ListTile(
+               onTap: ()=>Navigator.of(context).pushNamed(PublicBlogAuthorProfileScreen.routeName,arguments: widget.publicBlogId),
                leading: CircleAvatar(
                  radius: MediaQuery.of(context).size.width*0.09,
                  backgroundImage:photoUrl!=null?NetworkImage(photoUrl): AssetImage("assets/images/userimage.png"),
