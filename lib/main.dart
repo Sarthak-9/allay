@@ -4,6 +4,8 @@ import 'package:allay/screens/public_blog/public_blog_view_screen.dart';
 import 'package:allay/screens/public_blog/show_all_blogs.dart';
 import 'package:allay/screens/user_blog/edit_blog_screen.dart';
 import 'package:allay/screens/user_blog/user_blog_view_screen.dart';
+import 'package:allay/screens/user_chat/post_question_screen.dart';
+import 'package:allay/screens/user_chat/user_chat_screen.dart';
 import 'package:allay/screens/user_data/edit_profile_page.dart';
 import 'package:allay/screens/user_data/signup_page.dart';
 import 'package:allay/screens/user_data/user_profile_page.dart';
@@ -15,9 +17,14 @@ import 'package:googleapis/drive/v3.dart';
 import 'package:provider/provider.dart';
 
 import 'homepage.dart';
+import 'providers/controls/volunteer_chat_provider.dart';
 import 'providers/public_blog/public_blogs_provider.dart';
-import 'providers/user_chat/user_chat.dart';
-import 'providers/user_data/user_data_model.dart';
+import 'providers/user_chat/user_chat_provider.dart';
+import 'providers/user_data/user_data_provider.dart';
+import 'screens/controls/volunteer_chat_reply_screen.dart';
+import 'screens/controls/volunteer_picked_chat_screen.dart';
+import 'screens/controls/volunteer_replied_chat_screen.dart';
+import 'screens/controls/volunteer_replied_chat_view_screen.dart';
 import 'screens/public_blog/public_blog_author_profile_screen.dart';
 import 'screens/user_chat/user_question_reply_screen.dart';
 import 'screens/user_data/login_page.dart';
@@ -45,6 +52,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx)=>UserBlogs()),
         ChangeNotifierProvider(create: (ctx)=>UserData()),
         ChangeNotifierProvider(create: (ctx)=>UserChat()),
+        ChangeNotifierProvider(create: (ctx)=>VolunteerChat()),
       ],
       child: MaterialApp(
         title: 'Allay',
@@ -65,11 +73,43 @@ class MyApp extends StatelessWidget {
           EditBlogScreen.routeName: (ctx)=> EditBlogScreen(),
           ShowAllBlogs.routeName: (ctx)=> ShowAllBlogs(blogtype: 2,),
           PublicBlogAuthorProfileScreen.routeName:(ctx)=>PublicBlogAuthorProfileScreen(),
-          UserQuestionReplyScreen.routeName: (ctx)=>UserQuestionReplyScreen()
+          PostQuestionScreen.routeName:(ctx)=>PostQuestionScreen(),
+          UserChatScreen.routeName:(ctx)=>UserChatScreen(),
+          UserQuestionReplyScreen.routeName: (ctx)=>UserQuestionReplyScreen(),
+          VolunteerPickedChatScreen.routeName: (ctx)=>VolunteerPickedChatScreen(),
+          VolunteerChatReplyScreen.routeName:(ctx)=> VolunteerChatReplyScreen(),
+          VolunteerRepliedChatScreen.routeName:(ctx)=> VolunteerRepliedChatScreen(),
+          VolunteerRepliedChatViewScreen.routeName:(ctx)=>VolunteerRepliedChatViewScreen(),
         },
-        home: signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),
+        home:signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),
       ),
     );
   }
 }
+
+// class CheckLogin extends StatefulWidget {
+//   const CheckLogin({Key key}) : super(key: key);
+//
+//   @override
+//   _CheckLoginState createState() => _CheckLoginState();
+// }
+
+// class _CheckLoginState extends State<CheckLogin> {
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     Future.delayed(Duration.zero).then((value) => fetch());
+//     // fetch();
+//     super.initState();
+//   }
+//   void fetch() async {
+//     await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
+//     // Future.delayed(Duration.zero).then((value) => print(1));
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return signin==true? MyHomePage(tabNumber: 0,) : LoginPage();//MyHomePage(tabNumber: 0,);
+//   }
+// }
+
 

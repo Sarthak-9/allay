@@ -1,5 +1,5 @@
 import 'package:allay/providers/contants.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/screens/user_blog/add_blog_screen.dart';
 import 'package:allay/screens/user_blog/user_blogs_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/public_blog/public_blogs_provider.dart';
+import 'screens/controls/volunteer_active_chat_screen.dart';
 import 'screens/public_blog/public_blogs_screen.dart';
 import 'screens/user_chat/post_question_screen.dart';
-import 'screens/user_chat/user_chat_view_screen.dart';
+import 'screens/user_chat/user_chat_screen.dart';
 import 'screens/user_data/user_profile_page.dart';
 import 'widgets/maindrawer.dart';
 
@@ -24,7 +25,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int selectedTab = 0;
+  int selectedTab = 0,userRole;
   GlobalKey _bottomNavigationKey = GlobalKey();
   @override
   void initState() {
@@ -36,6 +37,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void fetch() async {
     await Provider.of<UserData>(context, listen: false).fetchUser();
+    userRole = Provider.of<UserData>(context, listen: false).userData.userRole;
+  print(userRole);
   }
 
   @override
@@ -62,12 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.white,
             ),
             Icon(
-              Icons.question_answer_rounded,
+              Icons.chat,
               size: 30,
               color: Colors.white,
             ),
             Icon(
-              Icons.person_rounded,
+              Icons.question_answer_rounded,
               size: 30,
               color: Colors.white,
             ),
@@ -101,10 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
         return AddBlogScreen();
 
       case 3:
-        return PostQuestionScreen();
+        return userRole == 5?PostQuestionScreen():UserChatScreen();
       //
       case 4:
-        return UserChatViewScreen();
+        return userRole == 5?UserChatScreen():VolunteerActiveChatScreen();
 
       default:
         return Container();

@@ -1,26 +1,28 @@
-import 'package:allay/models/user_chat/user_chat_model.dart';
+import 'package:allay/models/controls/volunteer_chat_model.dart';
 import 'package:allay/providers/contants.dart';
-import 'package:allay/providers/user_chat/user_chat_provider.dart';
+import 'package:allay/providers/controls/volunteer_chat_provider.dart';
 import 'package:allay/widgets/maindrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:rating_bar/rating_bar.dart';
 
-class UserQuestionReplyScreen extends StatefulWidget {
-  static const routeName = '/user-question-reply-screen';
+import '../../homepage.dart';
+
+class VolunteerChatReplyScreen extends StatefulWidget {
+  static const routeName = '/volunteer-chat-reply-screen';
 
   @override
-  _UserQuestionReplyScreenState createState() =>
-      _UserQuestionReplyScreenState();
+  _VolunteerChatReplyScreenState createState() =>
+      _VolunteerChatReplyScreenState();
 }
 
-class _UserQuestionReplyScreenState extends State<UserQuestionReplyScreen> {
+class _VolunteerChatReplyScreenState extends State<VolunteerChatReplyScreen> {
   // List<UserChatModel> userChats = [];
+  final replyQuestionController = TextEditingController();
   String userChatId;
   int chatIndex;
   double rating;
-  UserChatModel userChat;
+  VolunteerChatModel userChat;
   bool isLoading = false;
 
   @override
@@ -37,8 +39,10 @@ class _UserQuestionReplyScreenState extends State<UserQuestionReplyScreen> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     userChatId = ModalRoute.of(context).settings.arguments as String;
-    chatIndex = Provider.of<UserChat>(context, listen: false).findIndexById(userChatId);
-    final userChatList = Provider.of<UserChat>(context, listen: false).userChats;
+    chatIndex = Provider.of<VolunteerChat>(context, listen: false)
+        .findPickedChatIndexById(userChatId);
+    final userChatList =
+        Provider.of<VolunteerChat>(context, listen: false).volunteerPickedChats;
     userChat = userChatList[chatIndex];
     super.didChangeDependencies();
   }
@@ -50,7 +54,7 @@ class _UserQuestionReplyScreenState extends State<UserQuestionReplyScreen> {
   @override
   Widget build(BuildContext context) {
     Color borderColor = Theme.of(context).primaryColor;
-    double deviceHeight = MediaQuery.of(context).size.height;
+    // double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: MainAppBar(),
       drawer: MainDrawer(),
@@ -64,7 +68,7 @@ class _UserQuestionReplyScreenState extends State<UserQuestionReplyScreen> {
                 height: 20,
               ),
               Text(
-                'View Reply',
+                'Reply Question',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 24,
@@ -210,70 +214,39 @@ class _UserQuestionReplyScreenState extends State<UserQuestionReplyScreen> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                  alignment: Alignment.topCenter,
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  padding: EdgeInsets.all(5.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: borderColor, width: 2)),
-                  child: SingleChildScrollView(
-                      child: Text(
-                    userChat.questionReply != null
-                        ? userChat.questionReply
-                        : 'Analysis in progress...',
-                    style: TextStyle(fontSize: 20),
-                  ))),
               SizedBox(
                 height: 10,
               ),
-              if (userChat.questionReply != null)
-                Text(
-                  'Rate this Answer',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Theme.of(context).primaryColor,
+              Container(
+                // height: MediaQuery.of(context).size.height *0.6,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: borderColor, width: 2)),
+                child: Form(
+                  // key: postQuestionKey,
+                  child: TextFormField(
+                    controller: replyQuestionController,
+                    textCapitalization: TextCapitalization.sentences,
+                    validator: (value) {
+                      if (value.length <= 30) {
+                        return 'Question length not enough';
+                      }
+                      return null;
+                    },
+                    // onChanged: (value),
+                    maxLines:
+                        (MediaQuery.of(context).size.height * 0.025).toInt(),
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                        hintText: 'Write here', border: InputBorder.none),
                   ),
                 ),
-              SizedBox(
-                height: 10,
-              ),
-              if (userChat.questionReply != null&&userChat.chatReplyScore==null)
-                RatingBar(
-                  initialRating: userChat.chatReplyScore == null
-                      ? 0
-                      : userChat.chatReplyScore,
-                  onRatingChanged: (setRating) => setState(() => rating = setRating),
-                  filledIcon: Icons.star,
-                  emptyIcon: Icons.star_border,
-                  halfFilledIcon: Icons.star_half,
-                  isHalfAllowed: true,
-                  filledColor: Colors.green,
-                  emptyColor: Colors.redAccent,
-                  halfFilledColor: Colors.amberAccent,
-                  size: 40,
-                ),
-              if (userChat.questionReply != null&&userChat.chatReplyScore!=null)
-                RatingBar.readOnly(
-                initialRating: userChat.chatReplyScore == null
-                    ? 0
-                    : userChat.chatReplyScore,
-                // onRatingChanged: (setRating) => setState(() => rating = setRating),
-                filledIcon: Icons.star,
-                emptyIcon: Icons.star_border,
-                halfFilledIcon: Icons.star_half,
-                isHalfAllowed: true,
-                filledColor: Colors.green,
-                emptyColor: Colors.redAccent,
-                halfFilledColor: Colors.amberAccent,
-                size: 40,
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
-              if (userChat.questionReply != null &&
-                  userChat.chatReplyScore == null)
-                ElevatedButton(onPressed: rateReply, child: Text('Confirm Rating')),
+              ElevatedButton(onPressed: postReply, child: Text('Post Reply')),
               SizedBox(
                 height: 30,
               ),
@@ -284,10 +257,19 @@ class _UserQuestionReplyScreenState extends State<UserQuestionReplyScreen> {
     );
   }
 
-  void rateReply()async{
-  await Provider.of<UserChat>(context, listen: false).updateRating(chatIndex, rating);
-  setState(() {
-
-  });
+  void postReply()async{
+    userChat.questionReply = replyQuestionController.text;
+    await Provider.of<VolunteerChat>(context, listen: false).replyUserChat(userChat);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyHomePage(
+              tabNumber: 4,
+            )));
   }
+  // void rateReply() async {
+  //   await Provider.of<UserChat>(context, listen: false)
+  //       .updateRating(chatIndex, rating);
+  //   setState(() {});
+  // }
 }

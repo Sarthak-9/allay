@@ -8,7 +8,7 @@ class UserChatModel{
   final List<String> questionTags;
   final DateTime dateOfQuestion;
   final String chatPreferredLanguage;
-  final int chatReplyScore;
+  double chatReplyScore;
 
   UserChatModel({
       this.userChatId,

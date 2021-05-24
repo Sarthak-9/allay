@@ -1,7 +1,6 @@
-import 'dart:convert';
-
+import 'package:allay/homepage.dart';
 import 'package:allay/providers/contants.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/screens/user_data/login_page.dart';
 import 'package:allay/widgets/maindrawer.dart';
 import 'package:allay/widgets/user_data/user_not_loggedin.dart';
@@ -29,12 +28,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String _userPhone = ' ';
   String _userProfilePhoto = null;
   int touchedIndex;
-  var _isLoading = true;
-  var _loggedIn = false;
-  var _loggingOut = false;
-  var _logOut = false;
+  bool _isLoading = true;
+  bool _loggedIn = false;
+  bool _loggingOut = false;
+  bool _logOut = false;
   final storage = new FlutterSecureStorage();
-  DateTime _userDob = null;
+  int _userAge = null;
   Future<void> _fetchProfile() async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     if (_auth == null || _auth.currentUser == null) {
@@ -55,7 +54,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       _username = currentUser.userName;
       _userEmailId = currentUser.userEmail;
       _userPhone = currentUser.userPhone;
-      _userDob = currentUser.dateofBirth;
+      _userAge = currentUser.userAge;
       _userProfilePhoto = currentUser.profilePhotoLink != null
           ? currentUser.profilePhotoLink
           : null;
@@ -164,17 +163,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     size: 28.0,
                                   ),
                                   title: Text(
-                                    'Birth Date',
+                                    'Age',
                                     textAlign: TextAlign.left,
                                     textScaleFactor: 1.3,
                                     style: TextStyle(
                                       color: themeColor,
                                     ),
                                   ),
-                                  subtitle: _userDob != null
-                                      ? Text(
-                                          DateFormat('dd / MM / yyyy')
-                                              .format(_userDob),
+                                  subtitle: _userAge != null
+                                      ? Text(_userAge.toString(),
                                           //textScaleFactor: 1.4,
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.ellipsis,
@@ -228,82 +225,122 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             ],
                           ),
                         ),
+                        // SizedBox(
+                        //   height: 30,
+                        // ),
+                        // // Text('My Blogs')
+                        // SizedBox(
+                        //   height: 30,
+                        // ),
+                        // SizedBox(
+                        //   height: MediaQuery.of(context).size.width*0.55,
+                        //   width: MediaQuery.of(context).size.width*0.55,
+                        //   child: PieChart(
+                        //     PieChartData(
+                        //       // pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
+                        //       //   setState(() {
+                        //       //     if (pieTouchResponse.touchInput is FlLongPressEnd ||
+                        //       //         pieTouchResponse.touchInput is FlPanEnd) {
+                        //       //       touchedIndex = -1;
+                        //       //     } else {
+                        //       //       touchedIndex = pieTouchResponse.touchedSectionIndex;
+                        //       //     }
+                        //       //   });
+                        //       // }),
+                        //       borderData: FlBorderData(
+                        //         show: false,
+                        //       ),
+                        //       sectionsSpace: 0,
+                        //       centerSpaceRadius: 60,
+                        //       sections: [
+                        //         PieChartSectionData(
+                        //           value: 30,
+                        //           radius: 50,
+                        //           color: getMoodColorFromNumber(1),
+                        //           // title: 'Happy'
+                        //         ),
+                        //         PieChartSectionData(
+                        //           value: 20,
+                        //           radius: 50,
+                        //           color: getMoodColorFromNumber(2),
+                        //           // title: 'Excited'
+                        //         ),
+                        //         PieChartSectionData(
+                        //           value: 15,
+                        //           radius: 50,
+                        //           color: getMoodColorFromNumber(3),
+                        //           // title: 'Angry'
+                        //         ),
+                        //         PieChartSectionData(
+                        //           value: 20,
+                        //           radius: 50,
+                        //           color: getMoodColorFromNumber(4),
+                        //           // title: 'Sad'
+                        //         ),
+                        //         PieChartSectionData(
+                        //           value: 10,
+                        //           radius: 50,
+                        //           color: getMoodColorFromNumber(5),
+                        //           // title: 'Depressed'
+                        //         ),
+                        //         PieChartSectionData(
+                        //             value: 35,
+                        //             radius: 50,
+                        //             color: getMoodColorFromNumber(6),
+                        //             // title: 'Neutral'
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
-                        // Text('My Blogs')
-                        SizedBox(
-                          height: 30,
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.width*0.55,
-                          width: MediaQuery.of(context).size.width*0.55,
-                          child: PieChart(
-                            PieChartData(
-                              // pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
-                              //   setState(() {
-                              //     if (pieTouchResponse.touchInput is FlLongPressEnd ||
-                              //         pieTouchResponse.touchInput is FlPanEnd) {
-                              //       touchedIndex = -1;
-                              //     } else {
-                              //       touchedIndex = pieTouchResponse.touchedSectionIndex;
-                              //     }
-                              //   });
-                              // }),
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 60,
-                              sections: [
-                                PieChartSectionData(
-                                  value: 30,
-                                  radius: 50,
-                                  color: getMoodColorFromNumber(1),
-                                  // title: 'Happy'
-                                ),
-                                PieChartSectionData(
-                                  value: 20,
-                                  radius: 50,
-                                  color: getMoodColorFromNumber(2),
-                                  // title: 'Excited'
-                                ),
-                                PieChartSectionData(
-                                  value: 15,
-                                  radius: 50,
-                                  color: getMoodColorFromNumber(3),
-                                  // title: 'Angry'
-                                ),
-                                PieChartSectionData(
-                                  value: 20,
-                                  radius: 50,
-                                  color: getMoodColorFromNumber(4),
-                                  // title: 'Sad'
-                                ),
-                                PieChartSectionData(
-                                  value: 10,
-                                  radius: 50,
-                                  color: getMoodColorFromNumber(5),
-                                  // title: 'Depressed'
-                                ),
-                                PieChartSectionData(
-                                    value: 35,
-                                    radius: 50,
-                                    color: getMoodColorFromNumber(6),
-                                    // title: 'Neutral'
-                                ),
-                              ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            MaterialButton(
+                              elevation: 3,
+                              onPressed: () {
+                                updateRole(4);
+                                // Navigator.of(context)
+                                //     .pushNamed(UserAccountEditScreen.routename);
+                              },
+                              color: Colors.teal,
+                              child: Text('Volunteer Mode',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16)),
+                              textColor: Colors.white,
                             ),
-                          ),
+                            MaterialButton(
+                              elevation: 3,
+                              // minWidth: double.maxFinite,
+                              // height: 50,
+                              onPressed: () {
+                                updateRole(5);
+                                // Navigator.of(context)
+                                //     .pushNamed(UserAccountEditScreen.routename);
+                              },
+                              color: Colors.teal,
+                              child:
+                              // _loggingOut
+                              //     ? CircularProgressIndicator()
+                              //     :
+                                Text('      User Mode      ',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16)),
+                              textColor: Colors.white,
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 20,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             MaterialButton(
-                              elevation: 0,
+                              elevation: 3,
                               onPressed: () {
                                 Navigator.of(context)
                                     .pushNamed(UserAccountEditScreen.routename);
@@ -315,7 +352,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               textColor: Colors.white,
                             ),
                             MaterialButton(
-                              elevation: 0,
+                              elevation: 3,
                               // minWidth: double.maxFinite,
                               // height: 50,
                               onPressed: logoutUser,
@@ -373,5 +410,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
       Navigator.of(context)
           .pushNamedAndRemoveUntil(LoginPage.routename, (route) => false);
     }
+  }
+  Future<void> updateRole(int role)async{
+    // setState(() {
+    //   _loggingOut = true;
+    // });
+    await Provider.of<UserData>(context, listen: false).updateUserRole(role);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(MyHomePage.routeName, (route) => false);
+    // setState(() {
+    //   _loggingOut = false;
+    // });
   }
 }

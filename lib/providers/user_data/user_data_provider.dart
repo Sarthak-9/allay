@@ -17,27 +17,28 @@ class UserData with ChangeNotifier {
   Future<void> addUser(UserDataModel newUser) async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     var _userID = _auth.currentUser.uid;
-    print(_userID);
+    // print(_userID);
     try {
-      firestoreInstance.collection("userdata").doc(_userID).collection('userdetails').add({
+      firestoreInstance.collection("userdata").doc(_userID).set({
         'userEmail': newUser.userEmail,
         'userName': newUser.userName,
         'userPhone': newUser.userPhone,
-        'userDOB': newUser.dateofBirth != null
-            ? newUser.dateofBirth.toIso8601String()
-            : null,
-        'userRole': 'user',
+        'userAge': newUser.userAge ,
+            // != null
+            // ? newUser.dateofBirth.toIso8601String()
+            // : null,
+        'userRole': 5,
         "profilePhotoLink": newUser.profilePhotoLink,
       }).then((value) {
         // blogFirestoreId = value.id;
       });
       final user = UserDataModel(
-          userFId: _userID,
+          // userFId: _userID,
           userEmail: newUser.userEmail,
           userPhone: newUser.userPhone,
           userName: newUser.userName,
-          userRole: 'user',
-          dateofBirth: newUser.dateofBirth,
+          userRole: 5,
+          userAge: newUser.userAge,
         profilePhotoLink: null
       );
       _userData = user;
@@ -50,12 +51,12 @@ class UserData with ChangeNotifier {
   Future<void> updateUser(UserDataModel updateUser) async {
     String photoUrl;
     var _userID = _auth.currentUser.uid;
-    var userFid = _userData.userFId;
+    // var userFid = _userData.userFId;
     try {
       if(updateUser.userProfileImage!=null){
         FirebaseStorage storage = FirebaseStorage.instance;
         Reference ref =
-        storage.ref().child("userdata").child(DateTime.now().toIso8601String());
+        storage.ref().child("userdata").child(_userID+DateTime.now().toIso8601String());
         UploadTask uploadTask = ref.putFile(updateUser.userProfileImage);
         await uploadTask.whenComplete(() async {
           photoUrl = await ref.getDownloadURL();
@@ -65,11 +66,12 @@ class UserData with ChangeNotifier {
       }else{
         photoUrl = _userData.profilePhotoLink;
       }
-      await firestoreInstance.collection("userdata").doc(_userID).collection('userdetails').doc(userFid).update({
+      await firestoreInstance.collection("userdata").doc(_userID).update({
         'userPhone': updateUser.userPhone,
-        'userDOB': updateUser.dateofBirth != null
-            ? updateUser.dateofBirth.toIso8601String()
-            : null,
+        'userAge': updateUser.userAge,
+      // != null
+      //       ? updateUser.dateofBirth.toIso8601String()
+      //       : null,
         "profilePhotoLink": photoUrl,
       }).then((value) {
         // blogFirestoreId = value.id;
@@ -87,31 +89,34 @@ class UserData with ChangeNotifier {
     }
     _auth.currentUser.refreshToken;
     var _userID = _auth.currentUser.uid;
-    UserDataModel _loadedUser;
-    final querySnapshot = await firestoreInstance.collection("userdata").doc(_userID).collection('userdetails')
-        .get(); //.then((querySnapshot) {
-    querySnapshot.docs
-        .forEach((result) {
-          var user = UserDataModel(
-            userFId: result.id,
-            userEmail: result.data()["userEmail"],
-            userPhone: result.data()["userPhone"],
-            userName: result.data()["userName"],
-            dateofBirth: result.data()["userDOB"] != null
-                ? DateTime.parse(result.data()["userDOB"])
-                : null,
-            profilePhotoLink: result.data()["profilePhotoLink"],
+
+    final querySnapshot = await firestoreInstance.collection("userdata").doc(_userID).get(); //.then((querySnapshot) {
+    // querySnapshot.docs
+    //     .forEach((result) {
+    UserDataModel _loadedUser = UserDataModel(
+            // userFId: querySnapshot.id,
+            userEmail: querySnapshot.data()["userEmail"],
+            userPhone: querySnapshot.data()["userPhone"],
+            userName: querySnapshot.data()["userName"],
+            userAge: querySnapshot.data()["userAge"],//!=null? int.parse(result.data()["userAge"].toString()):null,
+            userRole:querySnapshot.data()["userRole"],//!=null? int.parse(result.data()["userRole"].toString()):null,
+              // != null
+              //   ? DateTime.parse(result.data()["userDOB"])
+              //   : null,
+            profilePhotoLink: querySnapshot.data()["profilePhotoLink"],
       );
-          _loadedUser = user;
-    });
+          // print(_loadedUser.userRole);
+          // _loadedUser = user;
+    // }
+    // );
       _userData = _loadedUser;
   }
 
-  Future<void> updateUserRole(String userRole)async{
+  Future<void> updateUserRole(int userRole)async{
     var _userID = _auth.currentUser.uid;
-    var userFid = _userData.userFId;
+    // var userFid = _userData.userFId;
     try{
-      await firestoreInstance.collection("userdata").doc(_userID).collection('userdetails').doc(userFid).update({
+      await firestoreInstance.collection("userdata").doc(_userID).update({
         'userRole':userRole,
       }).then((value) {
         // blogFirestoreId = value.id;

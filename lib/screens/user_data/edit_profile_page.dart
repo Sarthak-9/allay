@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:allay/providers/contants.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -28,19 +28,20 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
   String _username=' ';
   String _userEmailId=' ';
   String _userPhone = ' ';
-  var dateTime;
+  int _userAge;
+  // var dateTime;
   var _dateSelected = false;
-  var _isLoading = true;
-  var _loggedIn = false;
+  bool _isLoading = true;
+  bool _loggedIn = false;
   var _dobPresent = false;
-  var _loggingOut = false;
+  bool _loggingOut = false;
   // var _logOut = false;
   File _imageofUser;
   var pickedFile = null;
   final storage = new FlutterSecureStorage();
   var userPhoneController = TextEditingController();
   UserDataModel currentUser;
-  DateTime _userDob = null;
+  // DateTime _userDob = null;
 
   Future<void> _fetchProfile()async{
     FirebaseAuth _auth = FirebaseAuth.instance;
@@ -62,8 +63,8 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
       _username = currentUser.userName;
       _userEmailId = currentUser.userEmail;
       _userPhone = currentUser.userPhone;
-      _userDob = currentUser.dateofBirth;
-      dateTime = _userDob;
+      _userAge = currentUser.userAge;
+      // dateTime = _userDob;
     }
     setState(() {
       _isLoading = false;
@@ -192,64 +193,24 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        // border: Borde
-                        // Border.all(
-                        //
-                        //     color: Colors.black54
-                        // )
+                    ListTile(
+                      leading: Icon(
+                        Icons.calendar_today_rounded,
+                        color: themeColor,
+                        size: 28.0,
                       ),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.calendar_today_rounded,
+                      title: Text('Age',textAlign: TextAlign.left,
+                        textScaleFactor: 1.3,
+                        style: TextStyle(
                           color: themeColor,
-                          size: 28.0,
-                        ),
-                        title: Text('Birth Date',textAlign: TextAlign.left,
-                          textScaleFactor: 1.3,
-                          style: TextStyle(
-                            color: themeColor,
-                          ),),
-                        subtitle: dateTime!=null
-                            ? Text(
-                          DateFormat('dd / MM / yyyy')
-                              .format(dateTime),
-                          //textScaleFactor: 1.4,
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                            : Text('None'),
-                        trailing:_userDob==null? OutlineButton(
-                          child: Icon(Icons.date_range_rounded),
-                          color: Colors.red.shade50,
-                          splashColor: Colors.red.shade50,
-                          focusColor: Colors.red,
-                          onPressed: () async {
-                            dateTime = await PlatformDatePicker.showDate(
-                              context: context,
-                              firstDate: DateTime(DateTime.now().year - 50),
-                              initialDate: DateTime.now(),
-                              lastDate: DateTime(DateTime.now().year + 2),
-                              builder: (context, child) => Theme(
-                                data: ThemeData.light().copyWith(
-                                  colorScheme: ColorScheme.light(
-                                    primary: Theme.of(context).primaryColor,
-                                  ),
-                                  buttonTheme: ButtonThemeData(
-                                      textTheme: ButtonTextTheme.primary),
-                                ),
-                                child: child,
-                              ),
-                            );
-                            if (dateTime != null) {
-                              setState(() {
-                                _dateSelected = true;
-                              });
-                            }
-                          },
-                        ):SizedBox(),
-                      ),
+                        ),),
+                      subtitle: _userAge!=null
+                          ? Text(_userAge.toString(),
+                        //textScaleFactor: 1.4,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                          : Text('None'),
                     ),
                     ListTile(
                       leading: Icon(
@@ -325,7 +286,7 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
     if(userPhoneController.text.isEmpty){
       phoneNumber = _userPhone;
     }
-    UserDataModel updateUser = UserDataModel( userPhone: phoneNumber, dateofBirth: dateTime,userProfileImage: _imageofUser);
+    UserDataModel updateUser = UserDataModel( userPhone: phoneNumber, userAge: _userAge,userProfileImage: _imageofUser);
     await Provider.of<UserData>(context,listen: false).updateUser(updateUser);
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => MyHomePage(tabNumber: 4,)));

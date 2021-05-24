@@ -1,5 +1,5 @@
 import 'package:allay/homepage.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -274,7 +274,7 @@ class _LoginPageState extends State<LoginPage> {
               userEmail: user.email,
               userPhone: user.phoneNumber,
               userName: user.displayName,
-              dateofBirth: null,
+              userAge: null,
               profilePhotoLink: user.photoURL);
           await Provider.of<UserData>(context, listen: false).addUser(newUser);
         }

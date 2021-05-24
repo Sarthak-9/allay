@@ -6,7 +6,7 @@ import 'package:allay/models/user_blog/user_blog_model.dart';
 import 'package:allay/providers/contants.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

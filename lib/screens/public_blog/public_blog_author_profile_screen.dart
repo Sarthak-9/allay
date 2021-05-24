@@ -1,15 +1,11 @@
-import 'dart:convert';
-
 import 'package:allay/models/public_blog/public_blog_model.dart';
 import 'package:allay/providers/contants.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
 import 'package:allay/screens/user_data/login_page.dart';
-import 'package:allay/widgets/user_data/user_not_loggedin.dart';
+import 'package:allay/widgets/maindrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -31,19 +27,8 @@ class _PublicBlogAuthorProfileScreenState extends State<PublicBlogAuthorProfileS
   var _loggingOut = false;
   var _logOut = false;
   final storage = new FlutterSecureStorage();
-  DateTime _userDob = null;
-  Future<void> _fetchProfile()async{
-      var currentUser = publicBlog.authorDetails;
-      _username = currentUser.userName;
-      _userEmailId = currentUser.userEmail;
-      _userPhone = currentUser.userPhone;
-      _userDob = currentUser.dateofBirth;
-      _userProfilePhoto = currentUser.profilePhotoLink!=null?currentUser.profilePhotoLink:null;
+  int _userAge = null;
 
-      setState(() {
-      _isLoading = false;
-    });
-  }
   @override
   void initState()  {
     // TODO: implement initState
@@ -61,6 +46,18 @@ class _PublicBlogAuthorProfileScreenState extends State<PublicBlogAuthorProfileS
     _fetchProfile();
     super.didChangeDependencies();
   }
+  Future<void> _fetchProfile()async{
+    var currentUser = publicBlog.authorDetails;
+    _username = currentUser.userName;
+    _userEmailId = currentUser.userEmail;
+    _userPhone = currentUser.userPhone;
+    _userAge = currentUser.userAge;
+    _userProfilePhoto = currentUser.profilePhotoLink!=null?currentUser.profilePhotoLink:null;
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
   @override
   void didUpdateWidget(covariant PublicBlogAuthorProfileScreen oldWidget) {
     // TODO: implement didUpdateWidget
@@ -77,6 +74,7 @@ class _PublicBlogAuthorProfileScreenState extends State<PublicBlogAuthorProfileS
     final themeColor = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: MainAppBar(),
+      drawer: MainDrawer(),
       body: Container(
         // alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 12.0),
@@ -151,10 +149,8 @@ class _PublicBlogAuthorProfileScreenState extends State<PublicBlogAuthorProfileS
                           style: TextStyle(
                             color: themeColor,
                           ),),
-                        subtitle: _userDob!=null
-                            ? Text(
-                          DateFormat('dd / MM / yyyy')
-                              .format(_userDob),
+                        subtitle: _userAge!=null
+                            ? Text(_userAge.toString(),
                           //textScaleFactor: 1.4,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,

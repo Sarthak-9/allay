@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:allay/models/user_chat/user_chat_model.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -23,7 +23,20 @@ class UserChat with ChangeNotifier{
       'chatPreferredLanguage':chat.chatPreferredLanguage,
       'chatReplyScore':null
     });
-
+    final activeChatRef = databaseRef.child('activechat').child(chatRef.key);
+    await activeChatRef.set({
+      'userChatId':chatRef.key,
+      'userAccountId': _userId,
+      'isActive': true,
+      'volunteerAccountId': null,
+      'postTime': DateTime.now().toIso8601String(),
+      // 'questionText': chat.questionText,
+      // 'questionReply': null,
+      // 'questionTags':chat.questionTags,
+      // 'dateOfQuestion': chat.dateOfQuestion.toIso8601String(),
+      // 'chatPreferredLanguage':chat.chatPreferredLanguage,
+      // 'chatReplyScore':null
+    });
     UserChatModel newChat = UserChatModel(
       userChatId: chatRef.key,
       userAccountId: _userId,
@@ -50,7 +63,7 @@ class UserChat with ChangeNotifier{
         // List<String> qtag;
         // tags.forEach((element) { qtag.add(element);});
         UserChatModel newChat = UserChatModel(
-        userChatId: chat["userChatId"],
+        userChatId: key,
         userAccountId: chat["userAccountId"],
         volunteerAccountId: chat["volunteerAccountId"],
         questionText: chat["questionText"],
@@ -58,7 +71,7 @@ class UserChat with ChangeNotifier{
         questionTags: chat["questionTags"] as List<dynamic>!=null?(chat["questionTags"] as List<dynamic>).map((tag) => tag.toString()).toList():null,
         dateOfQuestion: DateTime.parse(chat["dateOfQuestion"]),
         chatPreferredLanguage: chat["chatPreferredLanguage"],
-        chatReplyScore: chat["chatReplyScore"],
+        chatReplyScore: chat["chatReplyScore"]!=null?double.parse(chat["chatReplyScore"].toString()):null,
       );
       _loadedChat.add(newChat);
       });
@@ -67,7 +80,23 @@ class UserChat with ChangeNotifier{
     _userChats = _loadedChat;
     notifyListeners();
   }
+
   UserChatModel findById(String chatId){
     return _userChats.firstWhere((chat) => chat.userChatId == chatId);
+  }
+
+  int findIndexById(String chatId){
+    return _userChats.indexWhere((chat) => chat.userChatId == chatId);
+  }
+
+  Future<void> updateRating(int chatIndex,double rating)async{
+    String _userId = _authRef.currentUser.uid;
+    String chatId = _userChats[chatIndex].userChatId;
+    _userChats[chatIndex].chatReplyScore = rating;
+    var snapshot = databaseRef.child(_userId).child('userchat').child(chatId);
+    await snapshot.update({
+      'chatReplyScore':rating,
+    });
+    notifyListeners();
   }
 }

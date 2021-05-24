@@ -1,6 +1,6 @@
 import 'package:allay/models/public_blog/public_blog_model.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/widgets/public_blog/public_blog_grid_widget.dart';
 import 'package:allay/widgets/public_blog/public_blog_search.dart';
 import 'package:allay/widgets/public_blog/public_blog_widget.dart';

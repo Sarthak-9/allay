@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:allay/homepage.dart';
 import 'package:allay/models/user_data/user_data_model.dart';
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/screens/user_data/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +28,15 @@ class _SignUpState extends State<SignUp> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _signupKey = GlobalKey<FormState>();
   final TextEditingController _displayName = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _passwordVerifyController =
       TextEditingController();
-  DateTime dateTime = null;
-  bool _dateSelected = false;
+  // DateTime dateTime = null;
+  // bool _dateSelected = false;
   bool _obsecurePassword = true;
   bool _obsecurePasswordVerify = true;
   final storage = new FlutterSecureStorage();
@@ -45,8 +46,9 @@ class _SignUpState extends State<SignUp> {
   String _userPassword = '';
   String _username = '';
   String _userPhoneNumber = '';
+  int _userAge;
   Timer timer;
-  var _isLoading = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -180,6 +182,39 @@ class _SignUpState extends State<SignUp> {
                         //         border: InputBorder.none),
                         //   ),
                         // ),
+                        SizedBox(height: 20),
+                        Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  color: Theme.of(context).primaryColor, width: 2)),
+                          padding: EdgeInsets.all(4.0),
+                          child: TextFormField(
+                            controller: _ageController,
+                            validator: (value) {
+                              int val = int.parse(value);
+                              if (value.isEmpty || val<12) {
+                                return 'User must be at least 12 years old';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _userAge = int.parse(value);
+                            },
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                labelText: 'Age',
+                                labelStyle: TextStyle(color: Colors.teal),
+                                icon: Icon(
+                                  Icons.date_range_rounded,
+                                  color: primaryColor,
+                                ),
+                                border: InputBorder.none),
+                          ),
+                        ),
                         SizedBox(height: 20),
                         Container(
                           alignment: Alignment.center,
@@ -402,7 +437,7 @@ class _SignUpState extends State<SignUp> {
               return false ;
             }
             try{
-              UserDataModel newUser = UserDataModel(userEmail: _userEmail, userPhone: 'None', userName: _username, dateofBirth: null,);
+              UserDataModel newUser = UserDataModel(userEmail: _userEmail, userPhone: 'None', userName: _username, userAge: _userAge,);
               await Provider.of<UserData>(context,listen: false).addUser(newUser);
             } catch (error) {
               print(error);

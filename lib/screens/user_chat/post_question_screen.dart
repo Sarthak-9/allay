@@ -1,11 +1,17 @@
 import 'package:allay/models/user_chat/user_chat_model.dart';
 import 'package:allay/providers/contants.dart';
-import 'package:allay/providers/user_chat/user_chat.dart';
+import 'package:allay/providers/user_chat/user_chat_provider.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
+import 'package:allay/screens/user_chat/user_chat_screen.dart';
+import 'package:allay/widgets/maindrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../homepage.dart';
+
 class PostQuestionScreen extends StatefulWidget {
+  static const routeName = '/post-question-screen';
   @override
   _PostQuestionScreenState createState() => _PostQuestionScreenState();
 }
@@ -14,13 +20,32 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   final postQuestionKey = GlobalKey<FormState>();
   final postQuestionController = TextEditingController();
   List<String> _selectedTags = [];
+  int userRole;
   String chosenLanguage;
   final _items = tagList
       .map((inter) => MultiSelectItem<String>(inter, inter))
       .toList();
 
+  // userRole = Provider.of<UserData>(context, listen: false).userData.userRole;
+@override
+  void initState() {
+    // TODO: implement initState
+  userRole = Provider.of<UserData>(context, listen: false).userData.userRole;
+  // Future.delayed(Duration.zero).then((value) =>
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    Color borderColor = Theme
+        .of(context)
+        .primaryColor;
+    return userRole ==5?MainBody():Scaffold(
+        appBar: MainAppBar(),
+        drawer: MainDrawer(),
+        body: MainBody()
+    );
+  }
+  Widget MainBody(){
     Color borderColor = Theme
         .of(context)
         .primaryColor;
@@ -214,8 +239,8 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
     await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Are you sure'),
-        content: Text('Do you want to upload this blog publically?'),
+        title: Text('Are you sure?'),
+        content: Text('Do you want to post this question?'),
         actions: <Widget>[
           TextButton(
             child: Text('No'),
@@ -235,8 +260,29 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
       ),
     );
     if(post){
+      if(chosenLanguage==null||chosenLanguage.isEmpty){
+        chosenLanguage = 'English';
+      }
       UserChatModel addChat = UserChatModel(questionText: postQuestionController.text,dateOfQuestion: DateTime.now(),chatPreferredLanguage: chosenLanguage,questionTags: _selectedTags);
       await Provider.of<UserChat>(context, listen: false).postUserChat(addChat);
+      int userRole = Provider.of<UserData>(context, listen: false).userData.userRole;
+      print(userRole);
+      if(userRole==5){
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                  tabNumber: 4,
+                )));
+      }else{
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                  tabNumber: 3,
+                )));
+        // Navigator.of(context).pushReplacementNamed(UserChatScreen.routeName);
+      }
     }
   }
 

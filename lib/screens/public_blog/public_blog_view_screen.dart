@@ -1,6 +1,5 @@
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
 import 'package:allay/screens/user_blog/edit_blog_screen.dart';
-import 'package:allay/widgets/public_blog/public_blog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

@@ -1,10 +1,12 @@
-import 'package:allay/providers/user_data/user_data_model.dart';
+import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/screens/user_data/login_page.dart';
 import 'package:allay/screens/user_data/user_profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+
+import '../homepage.dart';
 
 class MainDrawer extends StatelessWidget {
   final storage = new FlutterSecureStorage();
@@ -40,7 +42,18 @@ class MainDrawer extends StatelessWidget {
                 //     )
                 // ),
               ),
-
+              ListTile(
+                leading: Icon(Icons.home_rounded),
+                title: Text("Home"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyHomePage(
+                            tabNumber: 0,
+                          )));
+                },
+              ),
               // Divider(),
               ListTile(
                 leading: Icon(Icons.apps_rounded),
