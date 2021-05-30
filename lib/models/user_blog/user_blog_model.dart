@@ -8,7 +8,7 @@ class UserBlog{
   final DateTime userBlogDate;
   final String userBlogImageUrl;
   final String userBlogText;
-  final String userBlogAnalysisReport;
+  final int userBlogAnalysisReport;
   File userBlogImage;
   UserBlog({
       this.userBlogId,

@@ -269,6 +269,7 @@ class _LoginPageState extends State<LoginPage> {
           await _firebaseAuthLogin.signInWithCredential(loginCredential);
       final User user = authResult.user;
       if (user != null) {
+        // user.providerData
         if (authResult.additionalUserInfo.isNewUser) {
           UserDataModel newUser = UserDataModel(
               userEmail: user.email,
@@ -279,6 +280,7 @@ class _LoginPageState extends State<LoginPage> {
           await Provider.of<UserData>(context, listen: false).addUser(newUser);
         }
         await storage.write(key: "signedIn", value: "true");
+        await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
         Navigator.of(context).pushReplacementNamed(MyHomePage.routeName);
         // Navigator.of(context).pushReplacementNamed(HomePage.routeName);
       }
@@ -310,6 +312,7 @@ class _LoginPageState extends State<LoginPage> {
         // if(!prefs.containsKey('userData')){
         //   prefs.setString('userData', _emailController.text);
         // }
+        await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
         Navigator.of(context).pushReplacementNamed(MyHomePage.routeName);
       }
     } on PlatformException catch (error) {

@@ -9,7 +9,7 @@ class UserBlogs with ChangeNotifier{
   List<UserBlog> _userBlogList = [];
   List<UserBlog> _recentUserBlogs = [];
   final firestoreInstance = FirebaseFirestore.instance;
-
+  String imgUrl = 'https://firebasestorage.googleapis.com/v0/b/allay-convo.appspot.com/o/userdata%2FE2esVpFqZwSq25ufeyE3boPP7k222021-05-30T18%3A05%3A38.477107?alt=media&token=07406990-77dd-4b7a-8a88-1e1d33bd9eed';
   List<UserBlog> get userBlogList => _userBlogList;
   List<UserBlog> get recentUserBlogs => _recentUserBlogs;
 
@@ -17,7 +17,7 @@ class UserBlogs with ChangeNotifier{
     FirebaseAuth _auth = FirebaseAuth.instance;
     var _userID = _auth.currentUser.uid;
     var blogFirestoreId;
-    var photoUrl=null;
+    var photoUrl=imgUrl;
     if(newUserBlog.userBlogImage!=null){
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref =
@@ -69,7 +69,7 @@ class UserBlogs with ChangeNotifier{
           userBlogText: result.data()["userBlogText"],
           userBlogDate: DateTime.parse(result.data()["userBlogDate"]),
           userBlogMood: result.data()["userBlogMood"],
-          userBlogAnalysisReport:result.data()["userBlogAnalysisReport"],
+          userBlogAnalysisReport:result.data()["userBlogAnalysisReport"]!=null?int.parse(result.data()["userBlogAnalysisReport"].toString()):null,
           userBlogImageUrl: result.data()["userBlogImageUrl"],
         );
         loadedBlogs.add(loadedBlog);

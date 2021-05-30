@@ -11,6 +11,7 @@ class UserData with ChangeNotifier {
   UserDataModel _userData;
   final firestoreInstance = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  String imgUrl = 'https://firebasestorage.googleapis.com/v0/b/allay-convo.appspot.com/o/userdata%2FE2esVpFqZwSq25ufeyE3boPP7k222021-05-30T18%3A05%3A38.477107?alt=media&token=07406990-77dd-4b7a-8a88-1e1d33bd9eed';
 
   UserDataModel get userData => _userData;
 
@@ -19,7 +20,7 @@ class UserData with ChangeNotifier {
     var _userID = _auth.currentUser.uid;
     // print(_userID);
     try {
-      firestoreInstance.collection("userdata").doc(_userID).set({
+     await firestoreInstance.collection("userdata").doc(_userID).set({
         'userEmail': newUser.userEmail,
         'userName': newUser.userName,
         'userPhone': newUser.userPhone,
@@ -28,7 +29,7 @@ class UserData with ChangeNotifier {
             // ? newUser.dateofBirth.toIso8601String()
             // : null,
         'userRole': 5,
-        "profilePhotoLink": newUser.profilePhotoLink,
+        "profilePhotoLink": imgUrl,//newUser.profilePhotoLink,
       }).then((value) {
         // blogFirestoreId = value.id;
       });
@@ -49,7 +50,7 @@ class UserData with ChangeNotifier {
   }
 
   Future<void> updateUser(UserDataModel updateUser) async {
-    String photoUrl;
+    String photoUrl = imgUrl;
     var _userID = _auth.currentUser.uid;
     // var userFid = _userData.userFId;
     try {

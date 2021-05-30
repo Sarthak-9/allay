@@ -13,18 +13,22 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:googleapis/drive/v3.dart';
 import 'package:provider/provider.dart';
-
 import 'homepage.dart';
-import 'providers/controls/volunteer_chat_provider.dart';
+import 'providers/selector/selector_application_review.dart';
+import 'providers/volunteer/volunteer_application_form.dart';
+import 'providers/volunteer/volunteer_chat_provider.dart';
 import 'providers/public_blog/public_blogs_provider.dart';
 import 'providers/user_chat/user_chat_provider.dart';
 import 'providers/user_data/user_data_provider.dart';
-import 'screens/controls/volunteer_chat_reply_screen.dart';
-import 'screens/controls/volunteer_picked_chat_screen.dart';
-import 'screens/controls/volunteer_replied_chat_screen.dart';
-import 'screens/controls/volunteer_replied_chat_view_screen.dart';
+import 'screens/selector/selector_active_form_screen.dart';
+import 'screens/selector/selector_picked_form_screen.dart';
+import 'screens/selector/selector_picked_form_view_screen.dart';
+import 'screens/volunteer/volunteer_application_screen.dart';
+import 'screens/volunteer/volunteer_chat_reply_screen.dart';
+import 'screens/volunteer/volunteer_picked_chat_screen.dart';
+import 'screens/volunteer/volunteer_replied_chat_screen.dart';
+import 'screens/volunteer/volunteer_replied_chat_view_screen.dart';
 import 'screens/public_blog/public_blog_author_profile_screen.dart';
 import 'screens/user_chat/user_question_reply_screen.dart';
 import 'screens/user_data/login_page.dart';
@@ -53,6 +57,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx)=>UserData()),
         ChangeNotifierProvider(create: (ctx)=>UserChat()),
         ChangeNotifierProvider(create: (ctx)=>VolunteerChat()),
+        ChangeNotifierProvider(create: (ctx)=>VolunteerApplicationForm()),
+        ChangeNotifierProvider(create: (ctx)=>SelectionApplicationReview()),
       ],
       child: MaterialApp(
         title: 'Allay',
@@ -80,36 +86,51 @@ class MyApp extends StatelessWidget {
           VolunteerChatReplyScreen.routeName:(ctx)=> VolunteerChatReplyScreen(),
           VolunteerRepliedChatScreen.routeName:(ctx)=> VolunteerRepliedChatScreen(),
           VolunteerRepliedChatViewScreen.routeName:(ctx)=>VolunteerRepliedChatViewScreen(),
+          VolunteerQuestionApplicationScreen.routeName:(ctx)=> VolunteerQuestionApplicationScreen(),
+          SelectorActiveFormScreen.routeName:(ctx)=>SelectorActiveFormScreen(),
+          SelectorPickedFormScreen.routeName:(ctx) => SelectorPickedFormScreen(),
+          SelectorPickedFormViewScreen.routeName:(ctx) => SelectorPickedFormViewScreen(),
         },
-        home:signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),
+        home:CheckLogin()//signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),
       ),
     );
   }
 }
 
-// class CheckLogin extends StatefulWidget {
-//   const CheckLogin({Key key}) : super(key: key);
-//
-//   @override
-//   _CheckLoginState createState() => _CheckLoginState();
-// }
+class CheckLogin extends StatefulWidget {
+  const CheckLogin({Key key}) : super(key: key);
 
-// class _CheckLoginState extends State<CheckLogin> {
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     Future.delayed(Duration.zero).then((value) => fetch());
-//     // fetch();
-//     super.initState();
-//   }
-//   void fetch() async {
-//     await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
-//     // Future.delayed(Duration.zero).then((value) => print(1));
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     return signin==true? MyHomePage(tabNumber: 0,) : LoginPage();//MyHomePage(tabNumber: 0,);
-//   }
-// }
+  @override
+  _CheckLoginState createState() => _CheckLoginState();
+}
+
+class _CheckLoginState extends State<CheckLogin> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    setState(() {
+      isLoading = true;
+    });
+    // TODO: implement initState
+    Future.delayed(Duration.zero).then((value) => fetch());
+    // fetch();
+    super.initState();
+  }
+  void fetch() async {
+    await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
+    // Future.delayed(Duration.zero).then((value) => print(1));
+  setState(() {
+    isLoading = false;
+  });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return isLoading ? Container(
+      alignment: Alignment.center,
+      color: Colors.white,
+      child: Image.asset("assets/images/IMG.jpg"),):signin==true? MyHomePage(tabNumber: 0,) : LoginPage();//MyHomePage(tabNumber: 0,);
+  }
+}
 
 

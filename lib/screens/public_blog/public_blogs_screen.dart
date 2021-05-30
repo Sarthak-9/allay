@@ -30,7 +30,6 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
     // TODO: implement initState
     super.initState();
   }
-
   // @override
   // void didChangeDependencies() {
   //   // TODO: implement didChangeDependencies
@@ -81,6 +80,16 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
 
     });
   }
+  // @override
+  // void didUpdateWidget(covariant AllBlogsScreen oldWidget) {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   Future.delayed(Duration.zero).then((value) => null)
+  //   fetch();
+  //   // TODO: implement didUpdateWidget
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +222,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                           .publicBlogCurrentUserLiked,
                     ),
                     itemCount: sortedMood.length,
-                  ):Text('No Blogs'):
+                  ):Text('No Blogs',style: TextStyle(fontSize: 18),):
                   (searchResult.length != 0 ||
                           searchTextController.text.isNotEmpty)
                       ? GridView.builder(
@@ -253,7 +262,7 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
                               ),
                               itemCount: publicBlogsList.length,
                             )
-                          : Text('No Blogs'),
+                          : Text('No Blogs',style: TextStyle(fontSize: 18),),
                   // PublicBlogWidget(),
                 ],
               ),

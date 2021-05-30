@@ -11,9 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
-import 'package:flutter_quill/widgets/controller.dart';
-import 'package:flutter_quill/widgets/editor.dart';
-import 'package:flutter_quill/widgets/toolbar.dart';
+
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:sentiment_dart/sentiment_dart.dart';
 import 'package:image_picker/image_picker.dart';
@@ -555,7 +553,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
       userBlogMood: getMoodText(moodNumber),
       userBlogDate: dateTime,
       userBlogText: _blogtextController.text,
-      userBlogAnalysisReport: analysisScore.toString(),
+      userBlogAnalysisReport: analysisScore,
       userBlogImage: photoOfTheDay,
       userBlogImageUrl: null,
     );

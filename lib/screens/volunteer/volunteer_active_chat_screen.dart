@@ -1,8 +1,8 @@
-import 'package:allay/models/controls/volunteer_chat_model.dart';
+import 'package:allay/models/volunteer/volunteer_chat_model.dart';
 import 'package:allay/models/user_chat/user_chat_model.dart';
-import 'package:allay/providers/controls/volunteer_chat_provider.dart';
-import 'package:allay/screens/controls/volunteer_picked_chat_screen.dart';
-import 'package:allay/screens/controls/volunteer_replied_chat_screen.dart';
+import 'package:allay/providers/volunteer/volunteer_chat_provider.dart';
+import 'package:allay/screens/volunteer/volunteer_picked_chat_screen.dart';
+import 'package:allay/screens/volunteer/volunteer_replied_chat_screen.dart';
 import 'package:allay/screens/user_chat/user_question_reply_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

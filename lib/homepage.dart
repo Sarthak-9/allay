@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/public_blog/public_blogs_provider.dart';
-import 'screens/controls/volunteer_active_chat_screen.dart';
+import 'screens/volunteer/volunteer_active_chat_screen.dart';
 import 'screens/public_blog/public_blogs_screen.dart';
 import 'screens/user_chat/post_question_screen.dart';
 import 'screens/user_chat/user_chat_screen.dart';
@@ -26,9 +26,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedTab = 0,userRole;
+  bool isLoading = true;
   GlobalKey _bottomNavigationKey = GlobalKey();
   @override
   void initState() {
+    setState(() {
+      isLoading = true;
+    });
     // TODO: implement initState
     fetch();
     selectedTab = widget.tabNumber;
@@ -36,9 +40,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fetch() async {
-    await Provider.of<UserData>(context, listen: false).fetchUser();
+    // await Provider.of<UserData>(context, listen: false).fetchUser();
     userRole = Provider.of<UserData>(context, listen: false).userData.userRole;
-  print(userRole);
+    setState(() {
+      isLoading = false;
+    });
+    print(userRole);
   }
 
   @override
@@ -89,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         appBar: MainAppBar(),
         drawer: MainDrawer(),
-        body: tabsWidget());
+        body:isLoading?CircularProgressIndicator(): tabsWidget());
   }
 
   Widget tabsWidget() {

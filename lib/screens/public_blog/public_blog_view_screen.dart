@@ -148,7 +148,7 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Are you sure?'),
-        content: Text('Do you want to delete this blog?.'),
+        content: Text('Do you want to delete this blog?'),
         actions: <Widget>[
           TextButton(
             child: Text('No'),

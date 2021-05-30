@@ -5,6 +5,9 @@ import 'package:allay/screens/public_blog/show_all_blogs.dart';
 import 'package:allay/widgets/public_blog/public_blog_grid_widget.dart';
 import 'package:allay/widgets/user_blog/user_blog_search.dart';
 import 'package:allay/widgets/user_blog/user_blog_widget.dart';
+import 'package:allay/widgets/user_blog/user_public_blog_list.dart';
+import 'package:allay/widgets/user_blog/user_recent_blog_list.dart';
+import 'package:allay/widgets/user_blog/user_saved_blog_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +34,7 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
       isLoading = true;
     });
     Future.delayed(Duration.zero).then((_) {
-      fetch();
+      update();
     });
     // TODO: implement initState
     super.initState();
@@ -68,13 +71,17 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
   // @override
   // void didUpdateWidget(covariant UserBlogsScreen oldWidget) {
   //   // TODO: implement didUpdateWidget
-  //   super.didUpdateWidget(oldWidget);
   //   setState(() {
   //     isLoading = true;
   //   });
-  //   Future.delayed(Duration.zero).then((_)   {
-  //     fetch();
-  //   });
+  //   update();
+  //   // Future.delayed(Duration.zero).then((_)async   {
+  //   //
+  //   //   update();
+  //   // });
+  //
+  //   super.didUpdateWidget(oldWidget);
+  //
   // }
   @override
   void dispose() {
@@ -82,13 +89,16 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
     super.dispose();
   }
 
-  void fetch() async {
-    await Provider.of<PublicBlogs>(context, listen: false).fetchBlogs();
+  void update()async{
+    await fetch();
+  }
+
+  Future<void> fetch() async {
+
+
+    // await Provider.of<PublicBlogs>(context, listen: false).fetchBlogs();
     await Provider.of<UserBlogs>(context, listen: false).fetchUserBlog();
-    Provider.of<UserBlogs>(context, listen: false).fetchRecentBlogs();
-    await Provider.of<PublicBlogs>(context, listen: false)
-        .fetchUserPublicBlogs();
-    await Provider.of<PublicBlogs>(context, listen: false).fetchSavedBlogs();
+
     setState(() {
       isLoading = false;
     });
@@ -97,12 +107,9 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
   @override
   Widget build(BuildContext context) {
     var userBlogsList = Provider.of<UserBlogs>(context).userBlogList;
-    var recentUserBlogsList = Provider.of<UserBlogs>(context).recentUserBlogs;
-    var userPublicBlogList =
-        Provider.of<PublicBlogs>(context).userPublicBlogList;
-    var savedBlogList = Provider.of<PublicBlogs>(context).userSavedBlogList;
     return Container(
       padding: EdgeInsets.all(8.0),
+      height: MediaQuery.of(context).size.height-AppBar().preferredSize.height-kToolbarHeight-NavigationToolbar.kMiddleSpacing-15,
       child: isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -143,36 +150,7 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                     ),
                   ),
                   Divider(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: recentUserBlogsList.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No Blogs',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                          )
-                        :GridView.builder(
-                            physics: ScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 1),
-                            itemBuilder: (ctx, i) => UserBlogWidget(
-                              userBlogId: recentUserBlogsList[i].userBlogId,
-                              userBlogTitle:
-                                  recentUserBlogsList[i].userBlogTitle,
-                              userBlogText: recentUserBlogsList[i].userBlogText,
-                            ),
-                            itemCount: recentUserBlogsList.length,
-                          ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  UserRecentBlogList(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -196,32 +174,7 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                     ],
                   ),
                   Divider(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: savedBlogList.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No Blogs',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                          )
-                        : GridView.builder(
-                            physics: ScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 1),
-                            itemBuilder: (ctx, i) => PublicBlogGridWidget(
-                              publicBlogId: savedBlogList[i].publicBlogId,
-                              publicBlogTitle: savedBlogList[i].publicBlogTitle,
-                              publicBlogText: savedBlogList[i].publicBlogText,
-                            ),
-                            itemCount: savedBlogList.length,
-                          ),
-                  ),
+                  UserSavedBlogList(),
                   SizedBox(
                     height: 10,
                   ),
@@ -249,34 +202,7 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                   ),
                   Divider(),
                   //
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: userPublicBlogList.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No Blogs',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                          )
-                        : GridView.builder(
-                            physics: ScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 1),
-                            itemBuilder: (ctx, i) => PublicBlogGridWidget(
-                              publicBlogId: userPublicBlogList[i].publicBlogId,
-                              publicBlogTitle:
-                                  userPublicBlogList[i].publicBlogTitle,
-                              publicBlogText:
-                                  userPublicBlogList[i].publicBlogText,
-                            ),
-                            itemCount: userPublicBlogList.length,
-                          ),
-                  ),
+                  UserPublicBlogList(),
                   SizedBox(
                     height: 10,
                   ),

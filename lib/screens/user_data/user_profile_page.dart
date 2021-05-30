@@ -1,7 +1,9 @@
 import 'package:allay/homepage.dart';
 import 'package:allay/providers/contants.dart';
 import 'package:allay/providers/user_data/user_data_provider.dart';
+import 'package:allay/providers/volunteer/volunteer_application_form.dart';
 import 'package:allay/screens/user_data/login_page.dart';
+import 'package:allay/screens/volunteer/volunteer_application_screen.dart';
 import 'package:allay/widgets/maindrawer.dart';
 import 'package:allay/widgets/user_data/user_not_loggedin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,6 +36,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   bool _logOut = false;
   final storage = new FlutterSecureStorage();
   int _userAge = null;
+  bool applyButton = false;
   Future<void> _fetchProfile() async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     if (_auth == null || _auth.currentUser == null) {
@@ -58,6 +61,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
       _userProfilePhoto = currentUser.profilePhotoLink != null
           ? currentUser.profilePhotoLink
           : null;
+      if(currentUser.userRole==5) {
+        applyButton =
+            await Provider.of<VolunteerApplicationForm>(context, listen: false)
+                .fetchVolunteerForm();
+      }
     }
     // _userDob = _userProfile['userDOB'];
     setState(() {
@@ -113,7 +121,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           textAlign: TextAlign.left,
                         ),
                         SizedBox(
-                          height: 24,
+                          height: 20,
                         ),
                         CircleAvatar(
                           backgroundImage: _userProfilePhoto != null
@@ -299,6 +307,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            if(applyButton)
                             MaterialButton(
                               elevation: 3,
                               onPressed: () {
@@ -416,8 +425,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
     //   _loggingOut = true;
     // });
     await Provider.of<UserData>(context, listen: false).updateUserRole(role);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(MyHomePage.routeName, (route) => false);
+    await Provider.of<UserData>(context, listen: false).fetchUser();
+    if(role == 5){
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(MyHomePage.routeName, (route) => false);
+    }else{
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(VolunteerQuestionApplicationScreen.routeName, (route) => false);
+    }
     // setState(() {
     //   _loggingOut = false;
     // });

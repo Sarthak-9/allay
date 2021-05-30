@@ -51,6 +51,8 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
         .primaryColor;
     return Container(
       padding: const EdgeInsets.all(8.0),
+      height: MediaQuery.of(context).size.height-AppBar().preferredSize.height-kToolbarHeight-NavigationToolbar.kMiddleSpacing-15,
+
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -231,7 +233,7 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   }
 
   void postQuestion()async{
-    var isValid = postQuestionKey.currentState.validate();
+    bool isValid = postQuestionKey.currentState.validate();
     if (!isValid) {
       return;
     }
@@ -274,6 +276,7 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
                 builder: (context) => MyHomePage(
                   tabNumber: 4,
                 )));
+        print(4);
       }else{
         Navigator.pushReplacement(
             context,
@@ -281,6 +284,8 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
                 builder: (context) => MyHomePage(
                   tabNumber: 3,
                 )));
+        print(4);
+
         // Navigator.of(context).pushReplacementNamed(UserChatScreen.routeName);
       }
     }

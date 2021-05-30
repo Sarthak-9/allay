@@ -1,4 +1,5 @@
 import 'package:allay/providers/user_data/user_data_provider.dart';
+import 'package:allay/screens/selector/selector_active_form_screen.dart';
 import 'package:allay/screens/user_data/login_page.dart';
 import 'package:allay/screens/user_data/user_profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,8 +59,8 @@ class MainDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.apps_rounded),
                 title: Text("Controls"),
-                onTap: () {},
-              ),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(SelectorActiveFormScreen.routeName),              ),
               // Divider(),
               ListTile(
                 leading: Icon(Icons.account_circle_rounded),

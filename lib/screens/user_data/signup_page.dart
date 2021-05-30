@@ -443,6 +443,7 @@ class _SignUpState extends State<SignUp> {
               print(error);
               throw error;
             }
+            await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
             setState(() {
               _isLoading = false;
             });

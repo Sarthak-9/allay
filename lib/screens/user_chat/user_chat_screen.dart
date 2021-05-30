@@ -63,7 +63,8 @@ class _UserChatScreenState extends State<UserChatScreen> {
       child: CircularProgressIndicator(),
     ):SingleChildScrollView(
       child: Container(
-        height: MediaQuery.of(context).size.height,
+        // height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height-AppBar().preferredSize.height-kToolbarHeight-NavigationToolbar.kMiddleSpacing-15,
         child: Column(
           children: [
             SizedBox(
@@ -84,7 +85,14 @@ class _UserChatScreenState extends State<UserChatScreen> {
             SizedBox(
               height: 10,
             ),
-            Expanded(
+           userChats.isEmpty?Center(
+             child: Text(
+               'No Chats',
+               style: TextStyle(
+                 fontSize: 18,
+               ),
+             ),
+           ): Expanded(
               // height: MediaQuery.of(context).size.height,
               child: ListView.builder(
                   itemCount: userChats.length,

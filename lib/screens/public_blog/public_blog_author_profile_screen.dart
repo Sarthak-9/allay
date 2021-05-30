@@ -144,7 +144,7 @@ class _PublicBlogAuthorProfileScreenState extends State<PublicBlogAuthorProfileS
                           color: themeColor,
                           size: 28.0,
                         ),
-                        title: Text('Birth Date',textAlign: TextAlign.left,
+                        title: Text('Age',textAlign: TextAlign.left,
                           textScaleFactor: 1.3,
                           style: TextStyle(
                             color: themeColor,

@@ -22,7 +22,7 @@ class _UserBlogViewScreenState extends State<UserBlogViewScreen> {
     var userBlogId = ModalRoute.of(context).settings.arguments as String;
     var userBlog = Provider.of<UserBlogs>(context).findUserBlogById(userBlogId);
     var imageUrl = userBlog.userBlogImageUrl;
-    analysisScore =int.parse(userBlog.userBlogAnalysisReport);
+    analysisScore =userBlog.userBlogAnalysisReport;
     return Scaffold(
       appBar: MainAppBar(),
       body: Padding(
