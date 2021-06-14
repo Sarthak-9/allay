@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:allay/homepage.dart';
 import 'package:allay/models/public_blog/public_blog_model.dart';
 import 'package:allay/models/user_blog/user_blog_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

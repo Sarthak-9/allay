@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/user_data/user_data_provider.dart';
+import 'package:allay/screens/user_data/user_profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,8 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
   final formkey = GlobalKey<FormState>();
   String _username=' ';
   String _userEmailId=' ';
-  String _userPhone = ' ';
-  int _userAge;
+  String userBio = ' ';
+  DateTime userDateOfBirth;
   // var dateTime;
   var _dateSelected = false;
   bool _isLoading = true;
@@ -62,8 +63,8 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
       currentUser = Provider.of<UserData>(context,listen: false).userData;
       _username = currentUser.userName;
       _userEmailId = currentUser.userEmail;
-      _userPhone = currentUser.userPhone;
-      _userAge = currentUser.userAge;
+      userBio = currentUser.userBio;
+      userDateOfBirth = currentUser.userDateOfBirth;
       // dateTime = _userDob;
     }
     setState(() {
@@ -138,8 +139,8 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
                         backgroundImage: pickedFile == null
                             ? AssetImage('assets/images/userimage.png')
                             : FileImage(_imageofUser),
-                        radius:
-                        MediaQuery.of(context).size.width * 0.18,
+                        radius:60
+                        // MediaQuery.of(context).size.width * 0.18,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -174,7 +175,7 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
                   children: [
                     ListTile(
                       leading: Icon(
-                        Icons.person_outline_rounded,
+                        Icons.person,
                         color: themeColor,
                         size: 28.0,
                       ),
@@ -195,26 +196,29 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
                     ),
                     ListTile(
                       leading: Icon(
-                        Icons.calendar_today_rounded,
+                        Icons.date_range_rounded,
                         color: themeColor,
                         size: 28.0,
                       ),
-                      title: Text('Age',textAlign: TextAlign.left,
+                      title: Text('Birth Date',textAlign: TextAlign.left,
                         textScaleFactor: 1.3,
                         style: TextStyle(
                           color: themeColor,
                         ),),
-                      subtitle: _userAge!=null
-                          ? Text(_userAge.toString(),
+                      subtitle: userDateOfBirth!=null
+                          ? Text(DateFormat('dd / MM / yyyy').format(userDateOfBirth),
                         //textScaleFactor: 1.4,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                       )
                           : Text('None'),
+                      trailing:userDateOfBirth==null? IconButton(
+                        icon: Icon(Icons.calendar_today_rounded),onPressed: (){},
+                      ):SizedBox(),
                     ),
                     ListTile(
                       leading: Icon(
-                        Icons.account_circle_rounded,
+                        Icons.mail_rounded,
                         color: themeColor,
                         size: 28.0,
                       ),
@@ -235,26 +239,31 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
                       key: formkey,
                       child: ListTile(
                         leading: Icon(
-                          Icons.phone,
+                          Icons.text_snippet_rounded,
                           color: themeColor,
                           size: 28.0,
                         ),
                         title: TextFormField(
-                          // initialValue: _userPhone==null ? '': _userPhone,
-                          controller: userPhoneController,
-                          keyboardType: TextInputType.phone,
-                          validator: (value) {
-                            if (value.length !=10) {
-                              return 'Enter valid phone number';
-                            }
-                            return null;
-                          },                      ),
-                        subtitle: Text(
-                          _userPhone!=null?_userPhone:'None',
-                          //textScaleFactor: 1.4,
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
+                          initialValue: userBio,//_userPhone==null ? '': _userPhone,
+                          // controller: userPhoneController,
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.sentences,
+                          onSaved: (value){
+                            userBio = value;
+                          },
+                          // validator: (value) {
+                          //   if (value.length !=10) {
+                          //     return 'Enter valid phone number';
+                          //   }
+                          //   return null;
+                          // },
                         ),
+                        // subtitle: Text(
+                        //   _userPhone!=null?_userPhone:'None',
+                        //   //textScaleFactor: 1.4,
+                        //   textAlign: TextAlign.start,
+                        //   overflow: TextOverflow.ellipsis,
+                        // ),
                       ),
                     ),
                   ],
@@ -282,14 +291,14 @@ class _UserAccountEditScreenState extends State<UserAccountEditScreen> {
     if (!isValid) {
       return;
     }
-    var phoneNumber = userPhoneController.text;
-    if(userPhoneController.text.isEmpty){
-      phoneNumber = _userPhone;
-    }
-    UserDataModel updateUser = UserDataModel( userPhone: phoneNumber, userAge: _userAge,userProfileImage: _imageofUser);
+    formkey.currentState.save();
+    // var userBio = userPhoneController.text;
+    // if(userPhoneController.text.isEmpty){
+    //   userBio = userBio;
+    // }
+    UserDataModel updateUser = UserDataModel( userBio: userBio, userDateOfBirth: userDateOfBirth,userProfileImage: _imageofUser);
     await Provider.of<UserData>(context,listen: false).updateUser(updateUser);
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage(tabNumber: 4,)));
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => UserProfilePage()), (route) => false);
   }
 
 }

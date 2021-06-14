@@ -40,7 +40,8 @@ class _SignUpState extends State<SignUp> {
   bool _obsecurePassword = true;
   bool _obsecurePasswordVerify = true;
   final storage = new FlutterSecureStorage();
-
+  DateTime dateTime = null;
+  bool _dateSelected = false;
   bool _isSuccess;
   String _userEmail = '';
   String _userPassword = '';
@@ -140,79 +141,63 @@ class _SignUpState extends State<SignUp> {
                                 labelText: 'Name',
                                 labelStyle: TextStyle(color: Colors.teal),
                                 icon: Icon(
-                                  Icons.person_outline_rounded,
+                                  Icons.person,
                                   color: primaryColor,
                                 ),
                                 // prefix: Icon(icon),
                                 border: InputBorder.none),
                           ),
                         ),
-                        // // _buildTextField(
-                        // //     nameController, Icons.account_circle, 'Username'),
-                        // SizedBox(height: 20),
-                        // Container(
-                        //   alignment: Alignment.center,
-                        //   decoration: BoxDecoration(
-                        //       borderRadius: BorderRadius.circular(5),
-                        //       border: Border.all(
-                        //           color: Theme.of(context).primaryColor, width: 2)),
-                        //   padding: EdgeInsets.all(4.0),
-                        //   child: TextFormField(
-                        //     controller: _phoneNumberController,
-                        //     validator: (value) {
-                        //       if (value.isEmpty || value.length != 10) {
-                        //         return 'Please enter a valid phone number';
-                        //       }
-                        //       return null;
-                        //     },
-                        //     onSaved: (value) {
-                        //       _userPhoneNumber = value;
-                        //     },
-                        //     keyboardType: TextInputType.phone,
-                        //     style: TextStyle(color: Colors.black),
-                        //     decoration: InputDecoration(
-                        //         contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        //         labelText: 'Phone',
-                        //         labelStyle: TextStyle(color: Colors.teal),
-                        //         icon: Icon(
-                        //           Icons.phone,
-                        //           color: primaryColor,
-                        //         ),
-                        //         // prefix: Icon(icon),
-                        //         border: InputBorder.none),
-                        //   ),
-                        // ),
                         SizedBox(height: 20),
                         Container(
-                          alignment: Alignment.center,
+                          width: double.maxFinite,//MediaQuery.of(context).size.width*0.7,
+                          height: 60,
+                            padding: EdgeInsets.all(4.0),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(
                                   color: Theme.of(context).primaryColor, width: 2)),
-                          padding: EdgeInsets.all(4.0),
                           child: TextFormField(
-                            controller: _ageController,
-                            validator: (value) {
-                              int val = int.parse(value);
-                              if (value.isEmpty || val<12) {
-                                return 'User must be at least 12 years old';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _userAge = int.parse(value);
-                            },
-                            keyboardType: TextInputType.number,
-                            style: TextStyle(color: Colors.black),
+                            readOnly: true,
                             decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                labelText: 'Age',
-                                labelStyle: TextStyle(color: Colors.teal),
-                                icon: Icon(
-                                  Icons.date_range_rounded,
-                                  color: primaryColor,
+                              icon: Icon(
+                                Icons.date_range_rounded,
+                                color: primaryColor,
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                              border: InputBorder.none,
+                              // labelText: 'Email',
+                              hintStyle: TextStyle(color: Colors.teal),
+                              hintText:
+                                _dateSelected
+                                    ? DateFormat('dd / MM / yyyy').format(dateTime)
+                                    : 'Select Date of Birth',
+                            ),
+
+                            onTap: () async {
+                              FocusScope.of(context).unfocus();
+                              dateTime = await PlatformDatePicker.showDate(
+                                context: context,
+                                firstDate: DateTime(DateTime.now().year - 50),
+                                initialDate: DateTime.now(),
+                                lastDate: DateTime(DateTime.now().year + 2),
+                                builder: (context, child) => Theme(
+                                  data: ThemeData(
+                                    colorScheme: ColorScheme.light(
+                                      primary: Theme.of(context).primaryColor,
+                                    ),
+                                    buttonTheme: ButtonThemeData(
+                                        textTheme: ButtonTextTheme.primary),
+                                  ),
+                                  child: child,
                                 ),
-                                border: InputBorder.none),
+                              );
+                              if (dateTime != null) {
+                                setState(() {
+                                  _dateSelected = true;
+                                });
+                              }
+                            },
                           ),
                         ),
                         SizedBox(height: 20),
@@ -314,7 +299,7 @@ class _SignUpState extends State<SignUp> {
                                 labelText: 'Verify Password',
                                 labelStyle: TextStyle(color: Colors.teal),
                                 icon: Icon(
-                                  Icons.lock,
+                                  Icons.domain_verification_rounded,
                                   color: primaryColor,
                                 ),
                                 suffixIcon: IconButton(
@@ -377,6 +362,28 @@ class _SignUpState extends State<SignUp> {
 
   Future<void> _registerAccount() async {
     FocusScope.of(context).unfocus();
+    if(dateTime == null){
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Invalid Date of Birth'),
+          content: Text(
+              'Please enter a valid Date of Birth'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                // if (Navigator.canPop(context)) {
+                //   Navigator.of(ctx).pop();
+                // }
+              },
+            )
+          ],
+        ),
+      );
+      return;
+    }
     var isValid = _signupKey.currentState.validate();
     if (isValid) {
       _signupKey.currentState.save();
@@ -431,19 +438,20 @@ class _SignUpState extends State<SignUp> {
             if(Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } // await storage.write(key: "driveStarted", value: "true");
-            await storage.write(key: "signedIn",value: "true");
             FirebaseAuth _auth = FirebaseAuth.instance;
             if(_auth ==null||_auth.currentUser==null){
               return false ;
             }
             try{
-              UserDataModel newUser = UserDataModel(userEmail: _userEmail, userPhone: 'None', userName: _username, userAge: _userAge,);
+              UserDataModel newUser = UserDataModel(userEmail: _userEmail, userBio: null, userName: _username, userDateOfBirth: dateTime,);
               await Provider.of<UserData>(context,listen: false).addUser(newUser);
+              await storage.write(key: "signedIn",value: "true");
+
             } catch (error) {
               print(error);
               throw error;
             }
-            await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
+            await Provider.of<UserData>(context, listen: false).fetchUser();//.then((value) => print('22'));
             setState(() {
               _isLoading = false;
             });

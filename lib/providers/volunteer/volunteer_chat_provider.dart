@@ -68,7 +68,7 @@ class VolunteerChat with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> replyUserChat(VolunteerChatModel chat)async{
+  Future<void> replyUserChat(bool isReported,VolunteerChatModel chat)async{
     String _volunteerId = _authRef.currentUser.uid;
     final chatRef = databaseRef.child(chat.userAccountId).child('userchat').child(chat.userChatId);
     await chatRef.update({
@@ -81,6 +81,20 @@ class VolunteerChat with ChangeNotifier{
       // 'chatPreferredLanguage':chat.chatPreferredLanguage,
       // 'chatReplyScore':null
     });
+    if(isReported){
+      final volunteerChatRef = databaseRef.child(_volunteerId).child('volunteerchat').push();
+      await volunteerChatRef.set({
+        'userAccountId': chat.userAccountId,
+        'volunteerAccountId': _volunteerId,
+        'userChatId': chat.userChatId,
+        // 'questionText': chat.questionText,
+        // 'questionReply': null,
+        // 'questionTags':chat.questionTags,
+        // 'dateOfQuestion': chat.dateOfQuestion.toIso8601String(),
+        // 'chatPreferredLanguage':chat.chatPreferredLanguage,
+        'chatReplyScore':null
+      });
+    }
     // final volunteerChatRef = databaseRef.child(_volunteerId).child('volunteerchat').push();
     // await volunteerChatRef.set({
     //   'userAccountId': chat.userAccountId,
@@ -119,6 +133,17 @@ class VolunteerChat with ChangeNotifier{
     // );
     // _volunteerChats.add(newChat);
     notifyListeners();
+  }
+
+  Future<bool> checkPickStatus(String chatId)async{
+    var snapshot =  await databaseRef.child('activechat').child(chatId).once();
+    Map<dynamic,dynamic> ref = await snapshot.value;
+    if(ref["isActive"]==true){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   Future<void> fetchActiveChat()async{

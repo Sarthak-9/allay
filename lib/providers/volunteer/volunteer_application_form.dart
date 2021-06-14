@@ -12,13 +12,13 @@ class VolunteerApplicationForm with ChangeNotifier{
    FirebaseAuth _authRef = FirebaseAuth.instance;
    final databaseRef = FirebaseDatabase.instance.reference();
 
-   Future<void> applyVolunteer(List<String> answers)async{
+   Future<void> applyVolunteer(Map<String,String> answers)async{
       String _userId = _authRef.currentUser.uid;
       final applicationRef = databaseRef.child(_userId).child('volunteerapplication');
       await applicationRef.set({
          'volunteerAccountId': _userId,
          'selectorAccountId': null,
-         'volunteerAnswers': answers.toList(),
+         'volunteerAnswers': answers,
          'dateOfApplication': DateTime.now().toIso8601String(),
          'isSelected': false,
       });
@@ -34,13 +34,16 @@ class VolunteerApplicationForm with ChangeNotifier{
       final applicationRef =await databaseRef.child(_userId).child('volunteerapplication').once();
       if(applicationRef!=null){
          var volunteerApplicationRef = await applicationRef.value;
+         if(volunteerApplicationRef==null){
+            return true;
+         }
          VolunteerFormModel loadedForm = VolunteerFormModel(
             volunteerId: volunteerApplicationRef["volunteerAccountId"],
             selectorId: volunteerApplicationRef["selectorAccountId"],
-            volunteerAnswers:volunteerApplicationRef["volunteerAnswers"] as List<dynamic>!=null?(volunteerApplicationRef["volunteerAnswers"] as List<dynamic>).map((tag) => tag.toString()).toList():null,
+            volunteerAnswers:volunteerApplicationRef["volunteerAnswers"] as Map<dynamic,dynamic> !=null?(volunteerApplicationRef["volunteerAnswers"] as Map<dynamic,dynamic> ):null,//.map((tag) => tag.toString()).toList():null,
             dateOfApplication:volunteerApplicationRef["dateOfApplication"]!=null? DateTime.parse(volunteerApplicationRef["dateOfApplication"]):null,
          );
-         print(loadedForm.dateOfApplication);
+         // print(loadedForm.dateOfApplication);
          if(loadedForm.dateOfApplication != null){
             return false;
          }

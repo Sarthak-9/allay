@@ -1,5 +1,5 @@
 import 'package:allay/models/volunteer/volunteer_chat_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/volunteer/volunteer_chat_provider.dart';
 import 'package:allay/widgets/maindrawer.dart';
 import 'package:flutter/material.dart';
@@ -259,7 +259,7 @@ class _VolunteerChatReplyScreenState extends State<VolunteerChatReplyScreen> {
 
   void postReply()async{
     userChat.questionReply = replyQuestionController.text;
-    await Provider.of<VolunteerChat>(context, listen: false).replyUserChat(userChat);
+    await Provider.of<VolunteerChat>(context, listen: false).replyUserChat(false,userChat);
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(

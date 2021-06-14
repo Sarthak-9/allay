@@ -1,4 +1,4 @@
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/screens/user_blog/add_blog_screen.dart';
 import 'package:allay/screens/user_blog/user_blogs_screen.dart';
@@ -45,7 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       isLoading = false;
     });
-    print(userRole);
   }
 
   @override

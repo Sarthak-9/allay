@@ -14,6 +14,11 @@ class _UserPublicBlogListState extends State<UserPublicBlogList> {
   bool isLoading = true;
   @override
   void initState() {
+    setState(() {
+      isLoading = true;
+    });
+    Future.delayed(Duration.zero).then((value) => fetch());
+
     // setState(() {
     //   isLoading = true;
     // });
@@ -22,16 +27,16 @@ class _UserPublicBlogListState extends State<UserPublicBlogList> {
     super.initState();
   }
 
-  @override
-  void didUpdateWidget(covariant UserPublicBlogList oldWidget) {
-    // TODO: implement didUpdateWidget
-    setState(() {
-      isLoading = true;
-    });
-    Future.delayed(Duration.zero).then((value) => fetch());
-
-    super.didUpdateWidget(oldWidget);
-  }
+  // @override
+  // void didUpdateWidget(covariant UserPublicBlogList oldWidget) {
+  //   // TODO: implement didUpdateWidget
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   Future.delayed(Duration.zero).then((value) => fetch());
+  //
+  //   super.didUpdateWidget(oldWidget);
+  // }
   void fetch()async{
     await Provider.of<PublicBlogs>(context, listen: false)
         .fetchUserPublicBlogs();

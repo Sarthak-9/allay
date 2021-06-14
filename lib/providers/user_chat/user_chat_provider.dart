@@ -30,12 +30,6 @@ class UserChat with ChangeNotifier{
       'isActive': true,
       'volunteerAccountId': null,
       'postTime': DateTime.now().toIso8601String(),
-      // 'questionText': chat.questionText,
-      // 'questionReply': null,
-      // 'questionTags':chat.questionTags,
-      // 'dateOfQuestion': chat.dateOfQuestion.toIso8601String(),
-      // 'chatPreferredLanguage':chat.chatPreferredLanguage,
-      // 'chatReplyScore':null
     });
     UserChatModel newChat = UserChatModel(
       userChatId: chatRef.key,
@@ -43,7 +37,7 @@ class UserChat with ChangeNotifier{
       volunteerAccountId: null,
       questionText: chat.questionText,
       questionReply: null,
-      questionTags: null,
+      questionTags: chat.questionTags,
       dateOfQuestion: chat.dateOfQuestion,
       chatPreferredLanguage: chat.chatPreferredLanguage,
       chatReplyScore: null,
@@ -59,9 +53,6 @@ class UserChat with ChangeNotifier{
     var ref = await snapshot.value;
     if(ref!=null){
       await ref.forEach((key,chat){
-        // final tags = chat["questionTags"] as List<dynamic>;
-        // List<String> qtag;
-        // tags.forEach((element) { qtag.add(element);});
         UserChatModel newChat = UserChatModel(
         userChatId: key,
         userAccountId: chat["userAccountId"],

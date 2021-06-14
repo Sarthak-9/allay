@@ -2,7 +2,7 @@ import 'package:allay/models/volunteer/volunteer_question_model.dart';
 import 'package:flutter/material.dart';
 
 class VolunteerFormModel{
-  List<String> volunteerAnswers;
+  Map<dynamic,dynamic> volunteerAnswers;
   final String volunteerId;
   final String selectorId;
   final DateTime dateOfApplication;

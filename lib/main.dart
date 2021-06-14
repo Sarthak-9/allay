@@ -21,9 +21,11 @@ import 'providers/volunteer/volunteer_chat_provider.dart';
 import 'providers/public_blog/public_blogs_provider.dart';
 import 'providers/user_chat/user_chat_provider.dart';
 import 'providers/user_data/user_data_provider.dart';
+import 'screens/admin/admin_control_screen.dart';
 import 'screens/selector/selector_active_form_screen.dart';
 import 'screens/selector/selector_picked_form_screen.dart';
 import 'screens/selector/selector_picked_form_view_screen.dart';
+import 'screens/volunteer/volunteer_application_rules_screen.dart';
 import 'screens/volunteer/volunteer_application_screen.dart';
 import 'screens/volunteer/volunteer_chat_reply_screen.dart';
 import 'screens/volunteer/volunteer_picked_chat_screen.dart';
@@ -86,10 +88,12 @@ class MyApp extends StatelessWidget {
           VolunteerChatReplyScreen.routeName:(ctx)=> VolunteerChatReplyScreen(),
           VolunteerRepliedChatScreen.routeName:(ctx)=> VolunteerRepliedChatScreen(),
           VolunteerRepliedChatViewScreen.routeName:(ctx)=>VolunteerRepliedChatViewScreen(),
+          VolunteerApplicationRulesScreen.routeName:(ctx)=>VolunteerApplicationRulesScreen(),
           VolunteerQuestionApplicationScreen.routeName:(ctx)=> VolunteerQuestionApplicationScreen(),
           SelectorActiveFormScreen.routeName:(ctx)=>SelectorActiveFormScreen(),
           SelectorPickedFormScreen.routeName:(ctx) => SelectorPickedFormScreen(),
           SelectorPickedFormViewScreen.routeName:(ctx) => SelectorPickedFormViewScreen(),
+          AdminControlScreen.routeName:(ctx)=>AdminControlScreen()
         },
         home:CheckLogin()//signin==true? MyHomePage(tabNumber: 0,) : LoginPage(),//MyHomePage(tabNumber: 0,),
       ),
@@ -128,8 +132,8 @@ class _CheckLoginState extends State<CheckLogin> {
   Widget build(BuildContext context) {
     return isLoading ? Container(
       alignment: Alignment.center,
-      color: Colors.white,
-      child: Image.asset("assets/images/IMG.jpg"),):signin==true? MyHomePage(tabNumber: 0,) : LoginPage();//MyHomePage(tabNumber: 0,);
+      color: Colors.black,
+      child: Image.asset("assets/images/welcome_page_logo.jpg"),):signin==true? MyHomePage(tabNumber: 0,) : LoginPage();//MyHomePage(tabNumber: 0,);
   }
 }
 

@@ -1,4 +1,4 @@
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';

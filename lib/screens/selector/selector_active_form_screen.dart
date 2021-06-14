@@ -1,7 +1,7 @@
 import 'package:allay/models/volunteer/volunteer_chat_model.dart';
 import 'package:allay/models/user_chat/user_chat_model.dart';
 import 'package:allay/models/volunteer/volunteer_question_form_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/selector/selector_application_review.dart';
 import 'package:allay/providers/volunteer/volunteer_application_form.dart';
 import 'package:allay/providers/volunteer/volunteer_chat_provider.dart';
@@ -204,8 +204,18 @@ class _SelectorActiveFormScreenState extends State<SelectorActiveFormScreen> {
       ),
     );
     if (pick) {
-      await Provider.of<SelectionApplicationReview>(context, listen: false)
-          .pickVolunteerForm(index,volunteerId);
+      bool isActive = await Provider.of<SelectionApplicationReview>(context, listen: false).checkPickStatus(volunteerId);
+      if(isActive){
+        await Provider.of<SelectionApplicationReview>(context, listen: false)
+            .pickVolunteerForm(index, volunteerId);
+        final snackBar1 = SnackBar(content: Text('Form picked successfully !!'),duration: Duration(seconds: 3),backgroundColor: Colors.teal,);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar1);
+
+      }else{
+        final snackBar = SnackBar(content: Text('This form has already been picked'),duration: Duration(seconds: 3),);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      }
     }
     setState(() {});
   }

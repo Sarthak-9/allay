@@ -1,6 +1,6 @@
 import 'package:allay/models/volunteer/volunteer_chat_model.dart';
 import 'package:allay/models/user_chat/user_chat_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/volunteer/volunteer_chat_provider.dart';
 import 'package:allay/widgets/maindrawer.dart';
 import 'package:flutter/material.dart';

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:allay/homepage.dart';
 import 'package:allay/models/public_blog/public_blog_model.dart';
 import 'package:allay/models/user_blog/user_blog_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
 import 'package:allay/providers/user_blog/user_blog_provider.dart';
 import 'package:allay/providers/user_data/user_data_provider.dart';
@@ -305,7 +305,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           controller: _blogtextController,
                           textCapitalization: TextCapitalization.sentences,
                           validator: (value) {
-                            if (value.length < 50) {
+                            if (value.length <=0) {
                               return 'Blog is not long enough';
                             }
                             return null;
@@ -316,60 +316,60 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           decoration: InputDecoration(hintText: 'Write here',border: InputBorder.none),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      MultiSelectBottomSheetField(
-                        searchTextStyle: TextStyle(
-                          color: Colors.black,
-                        ),
-                        listType: MultiSelectListType.CHIP,
-                        itemsTextStyle: TextStyle(
-                          color: Colors.black,
-                        ),
-                        validator: (values){
-                          if(values == null || values.length<=5)
-                            return null;
-                          return 'Choose max 5 tags only';
-                        },
-                        autovalidateMode: AutovalidateMode.always,
-                        selectedItemsTextStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                        // searchable: true,
-                        items: _items,
-                        title: Text("Tags", style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),),
-                        selectedColor: Colors.teal,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(
-                            color: Theme.of(context).primaryColor,
-                            width: 2,
-                          ),
-                        ),
-
-                        buttonIcon: Icon(
-                          Icons.category,
-                          color: Colors.teal,
-                        ),
-                        buttonText: Text(
-                          "Tags",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ),
-                        onConfirm: (results) {
-                          _selectedTags = results;
-                        },
-
-                        // maxChildSize: 0.8,
-                        // initialChildSize: 0.6,
-                      ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      // MultiSelectBottomSheetField(
+                      //   searchTextStyle: TextStyle(
+                      //     color: Colors.black,
+                      //   ),
+                      //   listType: MultiSelectListType.CHIP,
+                      //   itemsTextStyle: TextStyle(
+                      //     color: Colors.black,
+                      //   ),
+                      //   validator: (values){
+                      //     if(values == null || values.length<=5)
+                      //       return null;
+                      //     return 'Choose max 5 tags only';
+                      //   },
+                      //   autovalidateMode: AutovalidateMode.always,
+                      //   selectedItemsTextStyle: TextStyle(
+                      //     color: Colors.white,
+                      //   ),
+                      //   // searchable: true,
+                      //   items: _items,
+                      //   title: Text("Tags", style: TextStyle(
+                      //     color: Colors.black,
+                      //     fontSize: 16,
+                      //   ),),
+                      //   selectedColor: Colors.teal,
+                      //   decoration: BoxDecoration(
+                      //     color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      //     borderRadius: BorderRadius.all(Radius.circular(5)),
+                      //     border: Border.all(
+                      //       color: Theme.of(context).primaryColor,
+                      //       width: 2,
+                      //     ),
+                      //   ),
+                      //
+                      //   buttonIcon: Icon(
+                      //     Icons.category,
+                      //     color: Colors.teal,
+                      //   ),
+                      //   buttonText: Text(
+                      //     "Tags",
+                      //     style: TextStyle(
+                      //       color: Colors.black,
+                      //       fontSize: 16,
+                      //     ),
+                      //   ),
+                      //   onConfirm: (results) {
+                      //     _selectedTags = results;
+                      //   },
+                      //
+                      //   // maxChildSize: 0.8,
+                      //   // initialChildSize: 0.6,
+                      // ),
                     ],
                   ),
                 ),
@@ -588,7 +588,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('Are you sure'),
+          title: Text('Are you sure?'),
           content: Text('Do you want to upload this blog publically?'),
           actions: <Widget>[
             TextButton(

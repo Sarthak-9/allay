@@ -1,5 +1,5 @@
 import 'package:allay/models/user_chat/user_chat_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/user_chat/user_chat_provider.dart';
 import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/screens/user_chat/post_question_screen.dart';

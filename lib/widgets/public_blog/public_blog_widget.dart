@@ -1,4 +1,4 @@
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/public_blog/public_blogs_provider.dart';
 import 'package:allay/screens/public_blog/public_blog_author_profile_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,10 +51,10 @@ class _PublicBlogWidgetState extends State<PublicBlogWidget> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(
-                color: Theme.of(context).primaryColor, width: 2)),
+        // decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(5),
+        //     border: Border.all(
+        //         color: Theme.of(context).primaryColor, width: 2)),
         padding: EdgeInsets.all(8.0),
          child: Column(
            children: [
@@ -102,7 +102,7 @@ class _PublicBlogWidgetState extends State<PublicBlogWidget> {
              ),
              Divider(),
              Row(
-               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+               mainAxisAlignment: MainAxisAlignment.spaceAround,
                children: [
                  IconButton(icon:likedStatus?Icon(Icons.thumb_up_alt_rounded):Icon(Icons.thumb_up_alt_outlined),
                      onPressed: (){
@@ -110,16 +110,30 @@ class _PublicBlogWidgetState extends State<PublicBlogWidget> {
                    setState(() {});
                    Provider.of<PublicBlogs>(context,listen: false).likePublicBlog(widget.publicBlogId, likedStatus);
                      }),
-                 IconButton(icon:Icon(Icons.share_rounded),
-                     onPressed: ()async{
-                     }),
+                 // IconButton(icon:Icon(Icons.share_rounded),
+                 //     onPressed: ()async{
+                 //     }),
                  IconButton(icon:Icon(Icons.save),
                      onPressed: ()async{
-                   Provider.of<PublicBlogs>(context,listen: false).saveBlog(widget.publicBlogId);
-
-                     }),
+                   bool saveStatus = await Provider.of<PublicBlogs>(context,listen: false).saveBlog(widget.publicBlogId);
+                   if(saveStatus){
+                        final snackBar =
+                            SnackBar(content: Text('Blog Saved Successfully'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }else{
+                     final snackBar = SnackBar(content: Text('Blog Removed Successfully'));
+                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                   }
+                    }),
                ],
-             )
+             ),
+             // SizedBox(
+             //   height: 10,
+             // ),
+             // Divider(
+             //   color: Theme.of(context).primaryColor,
+             //   thickness: 4,
+             // )
            ],
          ),
       ),

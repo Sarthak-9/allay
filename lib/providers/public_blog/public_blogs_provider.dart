@@ -14,6 +14,7 @@ class PublicBlogs with ChangeNotifier {
   List<PublicBlog> _publicBlogList = [];
   List<PublicBlog> _userPublicBlogList = [];
   List<PublicBlog> _userSavedBlogList = [];
+  List<PublicBlog> _authorPublicBlogList = [];
   List<PublicBlog> _moodSortedPublicBlogList = [];
   List<String> _userSavedBlogIdList = [];
   List<String> _userLikedPost = [];
@@ -24,6 +25,7 @@ class PublicBlogs with ChangeNotifier {
   List<PublicBlog> get publicBlogList => _publicBlogList;
   List<PublicBlog> get userPublicBlogList => _userPublicBlogList;
   List<PublicBlog> get userSavedBlogList => _userSavedBlogList;
+  List<PublicBlog> get authorPublicBlogList => _authorPublicBlogList;
   List<String> get userLikedPost => _userLikedPost;
   List<PublicBlog> get moodSortedPublicBlogList => _moodSortedPublicBlogList;
 
@@ -127,6 +129,7 @@ class PublicBlogs with ChangeNotifier {
     notifyListeners();
   }
 
+
   Future<UserDataModel> fetchAuthorDetails(String authorId) async {
     final querySnapshot = await firestoreInstance.collection("userdata").doc(authorId).get(); //.then((querySnapshot) {
     // querySnapshot.docs
@@ -134,7 +137,7 @@ class PublicBlogs with ChangeNotifier {
     UserDataModel _loadedUser = UserDataModel(
       // userFId: querySnapshot.id,
       userEmail: querySnapshot.data()["userEmail"],
-      userPhone: querySnapshot.data()["userPhone"],
+      userBio: querySnapshot.data()["userBio"],
       userName: querySnapshot.data()["userName"],
       // userAge: querySnapshot.data()["userAge"]!=null? int.parse(querySnapshot.data()["userAge"].toString()):null,
       // userRole:querySnapshot.data()["userRole"],//!=null? int.parse(result.data()["userRole"].toString()):null,
@@ -152,7 +155,7 @@ class PublicBlogs with ChangeNotifier {
     return _loadedUser;
   }
 
-  void saveBlog(String blogId)async{
+  Future<bool> saveBlog(String blogId)async{
     FirebaseAuth _auth = FirebaseAuth.instance;
     var _userID = _auth.currentUser.uid;
     _userSavedBlogIdList.add(blogId);
@@ -161,6 +164,11 @@ class PublicBlogs with ChangeNotifier {
     if(tr.value==null){
       var saveBlogPushRef = saveBlogRef.push();
       await saveBlogPushRef.set({'blogId': blogId});
+      return true;
+    }else{
+      await saveBlogRef.remove();//set({'blogId': blogId});
+
+      return false;
     }
     await fetchSavedBlogs();
   }
@@ -203,12 +211,51 @@ class PublicBlogs with ChangeNotifier {
       notifyListeners();
   }
 
-
   Future<void> fetchUserPublicBlogs()async{
     FirebaseAuth _auth = FirebaseAuth.instance;
     var _userID = _auth.currentUser.uid;
     List<PublicBlog> loadedBlogs = [];
     var snapshot = await FirebaseDatabase.instance.reference().child(_userID).child('userpublicblogs').once();
+    _userPublicBlogIdList.clear();
+    var ref = await snapshot.value;
+    if(ref!=null){
+      ref.forEach((key,values){
+        _userPublicBlogIdList.add(key);
+      });
+    }
+    await Future.forEach(_userPublicBlogIdList, (savedblogId)async {
+      var querySnapshot = await firestoreInstance.collection("publicblogs").doc(savedblogId).get(); //.then((querySnapshot) {
+      if(querySnapshot.exists) {
+        PublicBlog loadedBlog = PublicBlog(
+          publicBlogId: querySnapshot.id,
+          publicBlogTitle: querySnapshot.data()["publicBlogTitle"],
+          authorUserName: querySnapshot.data()["authorUserName"],
+          authorUserId: querySnapshot.data()["authorUserId"],
+          publicBlogDate:
+          DateTime.parse(querySnapshot.data()["publicBlogDate"]),
+          publicBlogText: querySnapshot.data()["publicBlogText"],
+          // publicBlogCurrentUserLiked:
+          //     querySnapshot.data()["publicBlogCurrentUserLiked"],
+          authorImageUrl: querySnapshot.data()["authorImageUrl"],
+          publicBlogLikes:
+          (querySnapshot.data()["publicBlogLikes"] as List<dynamic>)
+              .map((userid) => userid.toString())
+              .toList(),
+          publicBlogMood: querySnapshot.data()["publicBlogMood"],
+          isAuthor: _userID == querySnapshot.data()["authorUserId"],
+        );
+        loadedBlogs.add(loadedBlog);
+      }
+    }
+    );
+    _userPublicBlogList = loadedBlogs;
+    notifyListeners();
+  }
+  Future<List<PublicBlog>> fetchAuthorBlogs(String authorId)async{
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    var _userID = _auth.currentUser.uid;
+    List<PublicBlog> loadedBlogs = [];
+    var snapshot = await FirebaseDatabase.instance.reference().child(authorId).child('userpublicblogs').once();
     _userPublicBlogIdList.clear();
     var ref = await snapshot.value;
     if(ref!=null){
@@ -241,7 +288,8 @@ class PublicBlogs with ChangeNotifier {
       }
     }
     );
-    _userPublicBlogList = loadedBlogs;
+    return loadedBlogs;
+    // _authorPublicBlogList = loadedBlogs;
     notifyListeners();
   }
 

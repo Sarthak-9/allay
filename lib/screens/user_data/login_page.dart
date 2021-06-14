@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:platform_date_picker/platform_date_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:allay/models/user_data/user_data_model.dart';
 import 'signup_page.dart';
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final _loginkey = GlobalKey<FormState>();
   final storage = new FlutterSecureStorage();
-
+  DateTime dateTime;
   String _userEmail = '';
   String _userPassword = '';
   var _isLoading = false;
@@ -270,17 +271,36 @@ class _LoginPageState extends State<LoginPage> {
       final User user = authResult.user;
       if (user != null) {
         // user.providerData
-        if (authResult.additionalUserInfo.isNewUser) {
+        bool userInit = await Provider.of<UserData>(context, listen: false).fetchUser();
+        print(userInit);
+        if (!userInit) {
+          dateTime = await PlatformDatePicker.showDate(
+            context: context,
+            firstDate: DateTime(DateTime.now().year - 50),
+            initialDate: DateTime.now(),
+            lastDate: DateTime(DateTime.now().year + 2),
+            builder: (context, child) => Theme(
+              data: ThemeData(
+                colorScheme: ColorScheme.light(
+                  primary: Theme.of(context).primaryColor,
+                ),
+                buttonTheme: ButtonThemeData(
+                    textTheme: ButtonTextTheme.primary),
+              ),
+              child: child,
+            ),
+          );
+
           UserDataModel newUser = UserDataModel(
               userEmail: user.email,
-              userPhone: user.phoneNumber,
+              userBio: null,
               userName: user.displayName,
-              userAge: null,
+              userDateOfBirth: dateTime,
               profilePhotoLink: user.photoURL);
           await Provider.of<UserData>(context, listen: false).addUser(newUser);
         }
         await storage.write(key: "signedIn", value: "true");
-        await Provider.of<UserData>(context, listen: false).fetchUser().then((value) => print('22'));
+        await Provider.of<UserData>(context, listen: false).fetchUser();
         Navigator.of(context).pushReplacementNamed(MyHomePage.routeName);
         // Navigator.of(context).pushReplacementNamed(HomePage.routeName);
       }

@@ -37,8 +37,29 @@ class BlogSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    // throw UnimplementedError();
+    final List<PublicBlog> suggestionList = query.isEmpty
+    ? []
+    : searchBlog.where((blog) {
+    return blog.publicBlogTitle
+        .toLowerCase()
+        .contains(query.toLowerCase()) ||
+    blog.authorUserName.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+    // return ListView.builder(itemBuilder: (ctx, i) => ListTile());
+    return GridView.builder(
+    gridDelegate:
+    SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+    physics: ScrollPhysics(),
+    shrinkWrap: true,
+    itemCount: suggestionList.length,
+    itemBuilder: (ctx, i) => PublicBlogGridWidget(
+    publicBlogId: suggestionList[i].publicBlogId,
+    publicBlogTitle: suggestionList[i].publicBlogTitle,
+    publicBlogText: suggestionList[i].publicBlogText,
+    ),
+    // child: FestivalWidget(),
+    // child: ListView.builder(itemBuilder: (){}),
+    );
   }
 
   @override

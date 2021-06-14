@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:allay/models/volunteer/volunteer_chat_model.dart';
 import 'package:allay/models/user_chat/user_chat_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/volunteer/volunteer_chat_provider.dart';
 import 'package:allay/screens/volunteer/volunteer_chat_reply_screen.dart';
 import 'package:allay/screens/user_chat/user_question_reply_screen.dart';
@@ -54,80 +54,76 @@ class _VolunteerPickedChatScreenState extends State<VolunteerPickedChatScreen> {
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Picked Questions',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
                     ),
-                    Text(
-                      'Picked Questions',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    pickedChats.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No Questions',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  pickedChats.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No Questions',
+                            style: TextStyle(
+                              fontSize: 18,
                             ),
-                          )
-                        : Expanded(
-                            // height: MediaQuery.of(context).size.height,
-                            child: ListView.builder(
-                                itemCount: pickedChats.length,
-                                itemBuilder: (ctx, i) => Container(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Card(
-                                        elevation: 4,
-                                        shadowColor:
-                                            Theme.of(context).primaryColor,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4.0, vertical: 8.0),
-                                          child: ListTile(
-                                            // leading: Text('Q : ',style: TextStyle(
-                                            //   fontSize: 20
-                                            // ),),
-
-                                            onTap: () => Navigator.of(context)
-                                                .pushNamed(
-                                                    VolunteerChatReplyScreen
-                                                        .routeName,
-                                                    arguments: pickedChats[i]
-                                                        .userChatId),
-                                            title: Text('Q : ' +
-                                                pickedChats[i].questionText),
-                                            // trailing: ElevatedButton(child: Text('Pick'),onPressed: (){
-                                            //   pickQuestion(pickedChats[i]);
-                                            // },),
-                                            // trailing: Chip(label: Text(activeChats[i].volunteerAccountId == null?'Posted':activeChats[i].questionReply == null ? 'Assigned': 'Replied',style: TextStyle(
-                                            //     color: Colors.white
-                                            // ),),backgroundColor: Colors.green,),
-                                            subtitle: Text(
-                                                DateFormat('dd / MM / yyyy')
-                                                    .format(pickedChats[i]
-                                                        .dateOfQuestion)),
-                                          ),
-                                        ),
-                                      ),
-                                    )),
                           ),
-                  ],
-                ),
+                        )
+                      : ListView.builder(
+                        shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: pickedChats.length,
+                          itemBuilder: (ctx, i) => Container(
+                                padding: EdgeInsets.all(4.0),
+                                child: Card(
+                                  elevation: 4,
+                                  shadowColor:
+                                      Theme.of(context).primaryColor,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0, vertical: 8.0),
+                                    child: ListTile(
+                                      // leading: Text('Q : ',style: TextStyle(
+                                      //   fontSize: 20
+                                      // ),),
+
+                                      onTap: () => Navigator.of(context)
+                                          .pushNamed(
+                                              VolunteerChatReplyScreen
+                                                  .routeName,
+                                              arguments: pickedChats[i]
+                                                  .userChatId),
+                                      title: Text('Q : ' +
+                                          pickedChats[i].questionText),
+                                      // trailing: ElevatedButton(child: Text('Pick'),onPressed: (){
+                                      //   pickQuestion(pickedChats[i]);
+                                      // },),
+                                      // trailing: Chip(label: Text(activeChats[i].volunteerAccountId == null?'Posted':activeChats[i].questionReply == null ? 'Assigned': 'Replied',style: TextStyle(
+                                      //     color: Colors.white
+                                      // ),),backgroundColor: Colors.green,),
+                                      subtitle: Text(
+                                          DateFormat('dd / MM / yyyy')
+                                              .format(pickedChats[i]
+                                                  .dateOfQuestion)),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                ],
               ),
             ),
     );

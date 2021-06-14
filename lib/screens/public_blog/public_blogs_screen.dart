@@ -102,169 +102,182 @@ class _AllBlogsScreenState extends State<AllBlogsScreen> {
           )
         : RefreshIndicator(
             onRefresh: () => refresh(context),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'Explore Blogs',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            showSearch(
-                                context: context,
-                                delegate: BlogSearch(publicBlogsList));
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
+            child: Container(
+              color: Colors.grey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Card(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Explore Blogs',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 24,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          // Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Icon(Icons.search),
-                              Text(
-                                ' Search Blogs',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                    fontWeight: FontWeight.w600
+                              TextButton(
+                                  onPressed: () {
+                                    showSearch(
+                                        context: context,
+                                        delegate: BlogSearch(publicBlogsList));
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.search),
+                                      Text(
+                                        ' Search Blogs',
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              DropdownButton<String>(
+                                value: _chosenValue,
+                                underline: Container(color: Colors.blue,),
+                                style: TextStyle(color: Colors.teal),
+                                items: <String>[
+                                  'Happy',
+                                  'Excited',
+                                  'Angry',
+                                  'Sad',
+                                  'Depressed',
+                                  'Neutral',
+                                  'No Filters'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.black,fontSize: 18.0),
+                                    ),
+                                  );
+                                }).toList(),
+                                hint: Text(
+                                  "Sort by Category",
+                                  style: TextStyle(
+                                      color: Colors.teal,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
                                 ),
+                                onChanged: (String mood)async {
+                                  // String displayMood='';
+                                  setState(() {
+                                    _chosenValue = mood;
+                                    isSorting = true;
+                                  });
+                                  if(mood == 'No Filters'){
+                                    // displayMood = 'Sort by Category';
+                                    isMoodSorted = false;
+                                    sortedMood.clear();
+                                    await Future.delayed(Duration(seconds: 1)).then((value) => print('Abs'));
+                                    isSorting = false;
+                                  }else {
+                                    // displayMood = mood;
+                                    sortByMood(mood);
+                                  }
+                                  setState(() {
+
+                                  });
+                                },
                               ),
                             ],
-                          )),
-                      DropdownButton<String>(
-                        value: _chosenValue,
-                        underline: Container(color: Colors.blue,),
-                        style: TextStyle(color: Colors.teal),
-                        items: <String>[
-                          'Happy',
-                          'Excited',
-                          'Angry',
-                          'Sad',
-                          'Depressed',
-                          'Neutral',
-                          'No Filters'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(color: Colors.black,fontSize: 18.0),
-                            ),
-                          );
-                        }).toList(),
-                        hint: Text(
-                          "Sort by Category",
-                          style: TextStyle(
-                              color: Colors.teal,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        onChanged: (String mood)async {
-                          // String displayMood='';
-                          setState(() {
-                            _chosenValue = mood;
-                            isSorting = true;
-                          });
-                          if(mood == 'No Filters'){
-                            // displayMood = 'Sort by Category';
-                            isMoodSorted = false;
-                            sortedMood.clear();
-                            await Future.delayed(Duration(seconds: 1)).then((value) => print('Abs'));
-                            isSorting = false;
-                          }else {
-                            // displayMood = mood;
-                            sortByMood(mood);
-                          }
-                          setState(() {
-
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  isSorting?CircularProgressIndicator():isMoodSorted?
-                  sortedMood!=null && sortedMood.isNotEmpty?
-                  ListView.builder(
-                    physics: ScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemBuilder: (ctx, i) => PublicBlogWidget(
-                      publicBlogId: sortedMood[i].publicBlogId,
-                      publicBlogTitle:
-                      sortedMood[i].publicBlogTitle,
-                      publicBlogMood:
-                      sortedMood[i].publicBlogMood,
-                      publicBlogDate:
-                      sortedMood[i].publicBlogDate,
-                      publicBlogText:
-                      sortedMood[i].publicBlogText,
-                      authorUserName:
-                      sortedMood[i].authorUserName,
-                      authorProfilePicture:
-                      sortedMood[i].authorImageUrl,
-                      currentUserLiked: sortedMood[i]
-                          .publicBlogCurrentUserLiked,
-                    ),
-                    itemCount: sortedMood.length,
-                  ):Text('No Blogs',style: TextStyle(fontSize: 18),):
-                  (searchResult.length != 0 ||
-                          searchTextController.text.isNotEmpty)
-                      ? GridView.builder(
-                          physics: ScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2),
-                          itemBuilder: (ctx, i) => PublicBlogGridWidget(
-                            publicBlogId: searchResult[i].publicBlogId,
-                            publicBlogTitle: searchResult[i].publicBlogTitle,
-                            publicBlogText: searchResult[i].publicBlogText,
                           ),
-                          itemCount: searchResult.length,
-                        )
-                      : publicBlogsList.isNotEmpty
-                          ? ListView.builder(
-                              physics: ScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemBuilder: (ctx, i) => PublicBlogWidget(
-                                publicBlogId: publicBlogsList[i].publicBlogId,
-                                publicBlogTitle:
-                                    publicBlogsList[i].publicBlogTitle,
-                                publicBlogMood:
-                                    publicBlogsList[i].publicBlogMood,
-                                publicBlogDate:
-                                    publicBlogsList[i].publicBlogDate,
-                                publicBlogText:
-                                    publicBlogsList[i].publicBlogText,
-                                authorUserName:
-                                    publicBlogsList[i].authorUserName,
-                                authorProfilePicture:
-                                    publicBlogsList[i].authorImageUrl,
-                                currentUserLiked: publicBlogsList[i]
-                                    .publicBlogCurrentUserLiked,
-                              ),
-                              itemCount: publicBlogsList.length,
-                            )
-                          : Text('No Blogs',style: TextStyle(fontSize: 18),),
-                  // PublicBlogWidget(),
-                ],
+                          // Divider(),
+                          // SizedBox(
+                          //   height: 10,
+                          // ),
+                        ],
+                      ),
+                    ),
+
+                    isSorting?CircularProgressIndicator():isMoodSorted?
+                    sortedMood!=null && sortedMood.isNotEmpty?
+                    ListView.builder(
+                      physics: ScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (ctx, i) => PublicBlogWidget(
+                        publicBlogId: sortedMood[i].publicBlogId,
+                        publicBlogTitle:
+                        sortedMood[i].publicBlogTitle,
+                        publicBlogMood:
+                        sortedMood[i].publicBlogMood,
+                        publicBlogDate:
+                        sortedMood[i].publicBlogDate,
+                        publicBlogText:
+                        sortedMood[i].publicBlogText,
+                        authorUserName:
+                        sortedMood[i].authorUserName,
+                        authorProfilePicture:
+                        sortedMood[i].authorImageUrl,
+                        currentUserLiked: sortedMood[i]
+                            .publicBlogCurrentUserLiked,
+                      ),
+                      itemCount: sortedMood.length,
+                    ):Text('No Blogs',style: TextStyle(fontSize: 18),):
+                    (searchResult.length != 0 ||
+                            searchTextController.text.isNotEmpty)
+                        ? GridView.builder(
+                            physics: ScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                            itemBuilder: (ctx, i) => PublicBlogGridWidget(
+                              publicBlogId: searchResult[i].publicBlogId,
+                              publicBlogTitle: searchResult[i].publicBlogTitle,
+                              publicBlogText: searchResult[i].publicBlogText,
+                            ),
+                            itemCount: searchResult.length,
+                          )
+                        : publicBlogsList.isNotEmpty
+                            ? ListView.builder(
+                                physics: ScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemBuilder: (ctx, i) => Card(
+                                  elevation: 5,
+                                  child: PublicBlogWidget(
+                                    publicBlogId: publicBlogsList[i].publicBlogId,
+                                    publicBlogTitle:
+                                        publicBlogsList[i].publicBlogTitle,
+                                    publicBlogMood:
+                                        publicBlogsList[i].publicBlogMood,
+                                    publicBlogDate:
+                                        publicBlogsList[i].publicBlogDate,
+                                    publicBlogText:
+                                        publicBlogsList[i].publicBlogText,
+                                    authorUserName:
+                                        publicBlogsList[i].authorUserName,
+                                    authorProfilePicture:
+                                        publicBlogsList[i].authorImageUrl,
+                                    currentUserLiked: publicBlogsList[i]
+                                        .publicBlogCurrentUserLiked,
+                                  ),
+                                ),
+                                itemCount: publicBlogsList.length,
+                              )
+                            : Text('No Blogs',style: TextStyle(fontSize: 18),),
+                    // PublicBlogWidget(),
+                  ],
+                ),
               ),
             ),
           );

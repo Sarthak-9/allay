@@ -48,10 +48,13 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
             child: CircularProgressIndicator(),
           )
         : Container(
-
-      child: SingleChildScrollView(
+            child: SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height-AppBar().preferredSize.height-kToolbarHeight-NavigationToolbar.kMiddleSpacing-15,
+                height: MediaQuery.of(context).size.height -
+                    AppBar().preferredSize.height -
+                    kToolbarHeight -
+                    NavigationToolbar.kMiddleSpacing -
+                    15,
                 child: Column(
                   children: [
                     SizedBox(
@@ -117,7 +120,8 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
                                   elevation: 4,
                                   shadowColor: Theme.of(context).primaryColor,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
                                     child: Column(
                                       children: [
                                         ListTile(
@@ -144,10 +148,11 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
                                                   )
                                                 : Container(
                                                     height: 50,
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.70,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.70,
                                                     child: ListView.builder(
                                                       scrollDirection:
                                                           Axis.horizontal,
@@ -167,7 +172,8 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
                                                                       .white),
                                                             ),
                                                             backgroundColor:
-                                                                Theme.of(context)
+                                                                Theme.of(
+                                                                        context)
                                                                     .accentColor,
                                                           ),
                                                         );
@@ -190,14 +196,61 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
                                             // ),),
                                             // // onTap: ()=>Navigator.of(context).pushNamed(UserQuestionReplyScreen.routeName,arguments:activeChats[i].userChatId ),
 
-                                            title: Text('Q : ' +
-                                                activeChats[i].questionText,style: TextStyle(
-                                                fontSize: 18
-                                            ),),
+                                            title: GestureDetector(
+                                              onLongPress: ()async{
+                                                bool pick = false;
+                                                String replyText = "";
+                                                await showDialog(
+                                                  context: context,
+                                                  builder: (ctx) => AlertDialog(
+                                                    title: Text('Are you sure?'),
+                                                    content: Text('Do you think this question is inappropriate?'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text('Mark Irrelevant'),
+                                                        onPressed: () {
+                                                          pick = false;
+                                                          replyText = "This question has been marked irrelevant.";
+                                                          Navigator.of(ctx).pop();
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: Text('Mark Out of Bound'),
+                                                        onPressed: () {
+                                                          pick = true;
+                                                          replyText = "This question has been marked out of bound.";
+                                                          Navigator.of(ctx).pop();
+                                                        },
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                                bool isActive =  await Provider.of<VolunteerChat>(context, listen: false).checkPickStatus(activeChats[i].userChatId);
+                                                if(isActive) {
+                                                  // await Provider.of<VolunteerChat>(context, listen: false)
+                                                  //     .pickUserChat(i, activeChats[i]);
+                                                  activeChats[i].questionReply = replyText;
+                                                  await Provider.of<VolunteerChat>(context, listen: false).replyUserChat(true,activeChats[i]);
+                                                  setState(() {
+                                                    activeChats.removeAt(i);
+                                                  });
+                                                }else{
+                                                  final snackBar = SnackBar(content: Text('This question has already been picked'),duration: Duration(seconds: 3),);
+                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                                                }
+
+                                              },
+                                              child: Text(
+                                                'Q : ' +
+                                                    activeChats[i].questionText,
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ),
                                             trailing: ElevatedButton(
                                               child: Text('Pick'),
                                               onPressed: () {
-                                                pickQuestion(i,activeChats[i]);
+                                                pickQuestion(i, activeChats[i]);
                                               },
                                             ),
                                             // trailing: Chip(label: Text(activeChats[i].volunteerAccountId == null?'Posted':activeChats[i].questionReply == null ? 'Assigned': 'Replied',style: TextStyle(
@@ -211,13 +264,14 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
                                         ),
                                         Divider(),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            Text(
-                                                DateFormat('dd / MM / yyyy')
-                                                    .format(activeChats[i]
+                                            Text(DateFormat('dd / MM / yyyy')
+                                                .format(activeChats[i]
                                                     .dateOfQuestion)),
-                                            Text(activeChats[i].chatPreferredLanguage)
+                                            Text(activeChats[i]
+                                                .chatPreferredLanguage)
                                           ],
                                         ),
                                       ],
@@ -231,10 +285,10 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
                 ),
               ),
             ),
-        );
+          );
   }
 
-  void pickQuestion(int index,VolunteerChatModel chat) async {
+  void pickQuestion(int index, VolunteerChatModel chat) async {
     bool pick = false;
     await showDialog(
       context: context,
@@ -259,13 +313,22 @@ class _VolunteerActiveChatScreenState extends State<VolunteerActiveChatScreen> {
         ],
       ),
     );
-    if (pick) {
-      await Provider.of<VolunteerChat>(context, listen: false)
-          .pickUserChat(index,chat);
-    }
-    setState(() {
 
-    });
+    if (pick) {
+      bool isActive =  await Provider.of<VolunteerChat>(context, listen: false).checkPickStatus(chat.userChatId);
+      if(isActive) {
+        await Provider.of<VolunteerChat>(context, listen: false)
+            .pickUserChat(index, chat);
+        final snackBar1 = SnackBar(content: Text('Question picked successfully !!'),duration: Duration(seconds: 3),backgroundColor: Colors.teal,);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar1);
+
+      }else{
+        final snackBar = SnackBar(content: Text('This question has already been picked'),duration: Duration(seconds: 3),);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      }
+    }
+    setState(() {});
   }
 // String getLabelText(String status){
 //

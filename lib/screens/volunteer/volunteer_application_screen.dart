@@ -1,5 +1,5 @@
 import 'package:allay/homepage.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/volunteer/volunteer_application_form.dart';
 import 'package:allay/widgets/maindrawer.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,149 +64,138 @@ class _VolunteerQuestionApplicationScreenState
                 SizedBox(
                   height: 10,
                 ),
-                SizedBox(
-                    height: 230,
-                    width: deviceWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Question 1 :',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Image.network(volunteerQuestions[0]),
-                        TextFormField(
-                          controller: question0,
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty)
-                              return 'Enter a valid answer';
-                            return null;
-                          },
-                          decoration: InputDecoration(hintText: 'Answer'),
-                        ),
-                      ],
-                    )),
-                SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                    height: 230,
-                    width: deviceWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Question 2 :',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Image.network(volunteerQuestions[1]),
-                        TextFormField(
-                          controller: question1,
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty)
-                              return 'Enter a valid answer';
-                            return null;
-                          },
-                          decoration: InputDecoration(hintText: 'Answer'),
-                        ),
-                      ],
-                    )),
-                SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                    height: 230,
-                    width: deviceWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Question 3 :',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Image.network(volunteerQuestions[2]),
-                        TextFormField(
-                          controller: question2,
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty)
-                              return 'Enter a valid answer';
-                            return null;
-                          },
-                          decoration: InputDecoration(hintText: 'Answer'),
-                        ),
-                      ],
-                    )),
-                SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                  height: 230,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 4 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[3]),
-                      TextFormField(
-                        controller: question3,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty)
-                            return 'Enter a valid answer';
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 1 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[0]),
+                    TextFormField(
+                      controller: question0,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Enter a valid answer';
+                        if (value == '1' || value == '2' || value == '3' || value == '4')
                           return null;
-                        },
-                        decoration: InputDecoration(hintText: 'Answer'),
-                      ),
-                    ],
-                  ),
+                        return 'Enter a valid answer';                      },
+                      decoration: InputDecoration(hintText: 'Answer'),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                  height: 230,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 5 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[4]),
-                      TextFormField(
-                        controller: question4,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty)
-                            return 'Enter a valid answer';
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 2 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[1]),
+                    TextFormField(
+                      controller: question1,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Enter a valid answer';
+                        if (value == '1' || value == '2' || value == '3' || value == '4')
                           return null;
-                        },
-                        decoration: InputDecoration(hintText: 'Answer'),
-                      ),
-                    ],
-                  ),
+                        return 'Enter a valid answer';                     },
+                      decoration: InputDecoration(hintText: 'Answer'),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 3 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[2]),
+                    TextFormField(
+                      controller: question2,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Enter a valid answer';
+                        if (value == '1' || value == '2' || value == '3' || value == '4')
+                          return null;
+                        return 'Enter a valid answer';
+                      },
+                      decoration: InputDecoration(hintText: 'Answer'),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 4 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[3]),
+                    TextFormField(
+                      controller: question3,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Enter a valid answer';
+                        if (value == '1' || value == '2' || value == '3' || value == '4')
+                          return null;
+                        return 'Enter a valid answer';   } ,
+                      decoration: InputDecoration(hintText: 'Answer'),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 5 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[4]),
+                    TextFormField(
+                      controller: question4,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Enter a valid answer';
+                        if (value == '1' || value == '2' || value == '3' || value == '4')
+                          return null;
+                        return 'Enter a valid answer';}      ,
+                      decoration: InputDecoration(hintText: 'Answer'),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 20,
@@ -215,113 +204,101 @@ class _VolunteerQuestionApplicationScreenState
                 SizedBox(
                   height: 20,
                 ),
-                SizedBox(
-                  height: 300,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 6 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[5]),
-                      SizedBox(
-                        height: 100,
-                        child: TextFormField(
-                          controller: question5,
-                          validator: (value) {
-                            if (value == null || value.isEmpty)
-                              return 'Enter a valid answer';
-                            return null;
-                          },
-                          maxLines: 5,
-                          keyboardType: TextInputType.multiline,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            hintText: 'Answer',
-                          ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 6 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[5]),
+                    SizedBox(
+                      height: 100,
+                      child: TextFormField(
+                        controller: question5,
+                        validator: (value) {
+                          if (value == null || value.isEmpty)
+                            return 'Enter a valid answer';
+                          return null;
+                        },
+                        maxLines: 5,
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: InputDecoration(
+                          hintText: 'Answer',
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                  height: 300,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 7 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[6]),
-                      SizedBox(
-                        height: 100,
-                        child: TextFormField(
-                          controller: question6,
-                          validator: (value) {
-                            if (value == null || value.isEmpty)
-                              return 'Enter a valid answer';
-                            return null;
-                          },
-                          maxLines: 5,
-                          keyboardType: TextInputType.multiline,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            hintText: 'Answer',
-                          ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 7 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[6]),
+                    SizedBox(
+                      height: 100,
+                      child: TextFormField(
+                        controller: question6,
+                        validator: (value) {
+                          if (value == null || value.isEmpty)
+                            return 'Enter a valid answer';
+                          return null;
+                        },
+                        maxLines: 5,
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: InputDecoration(
+                          hintText: 'Answer',
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                  height: 300,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 8 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[7]),
-                      SizedBox(
-                        height: 100,
-                        child: TextFormField(
-                          controller: question7,
-                          validator: (value) {
-                            if (value == null || value.isEmpty)
-                              return 'Enter a valid answer';
-                            return null;
-                          },
-                          maxLines: 5,
-                          keyboardType: TextInputType.multiline,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            hintText: 'Answer',
-                          ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 8 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[7]),
+                    SizedBox(
+                      height: 100,
+                      child: TextFormField(
+                        controller: question7,
+                        validator: (value) {
+                          if (value == null || value.isEmpty)
+                            return 'Enter a valid answer';
+                          return null;
+                        },
+                        maxLines: 5,
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: InputDecoration(
+                          hintText: 'Answer',
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 30,
@@ -352,8 +329,8 @@ class _VolunteerQuestionApplicationScreenState
     await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Are you sure'),
-        content: Text('Do you want to upload this blog publically?'),
+        title: Text('Are you sure?'),
+        content: Text('Do you want to submit this application form?'),
         actions: <Widget>[
           TextButton(
             child: Text('No'),
@@ -373,15 +350,15 @@ class _VolunteerQuestionApplicationScreenState
       ),
     );
     if (uploadQuestions) {
-      List<String> answers = List<String>.filled(10, '0');
-      answers[0] = question0.text;
-      answers[1] = question1.text;
-      answers[2] = question2.text;
-      answers[3] = question3.text;
-      answers[4] = question4.text;
-      answers[5] = question5.text;
-      answers[6] = question6.text;
-      answers[7] = question7.text;
+      Map<String,String>  answers={};
+      answers['answer1'] = question0.text;
+      answers['answer2'] = question1.text;
+      answers['answer3'] = question2.text;
+      answers['answer4'] = question3.text;
+      answers['answer5'] = question4.text;
+      answers['answer6'] = question5.text;
+      answers['answer7'] = question6.text;
+      answers['answer8'] = question7.text;
       await Provider.of<VolunteerApplicationForm>(context, listen: false)
           .applyVolunteer(answers);
       Navigator.of(context)

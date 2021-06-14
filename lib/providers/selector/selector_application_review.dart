@@ -50,6 +50,16 @@ class SelectionApplicationReview with ChangeNotifier {
     });
     _volunteerActiveForms.removeAt(index);
   }
+  Future<bool> checkPickStatus(String userFormId)async{
+    var snapshot =  await databaseRef.child(userFormId).child('volunteerapplication').once();
+    Map<dynamic,dynamic> ref = await snapshot.value;
+    if(ref["selectorAccountId"]==null){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
   Future<void> fetchVolunteerActiveForm()async{
     String _selectoruserId = _authRef.currentUser.uid;
@@ -65,7 +75,7 @@ class SelectionApplicationReview with ChangeNotifier {
           VolunteerFormModel loadedForm = VolunteerFormModel(
             volunteerId: volunteerApplicationRef["volunteerAccountId"],
             selectorId: volunteerApplicationRef["selectorAccountId"],
-            volunteerAnswers:volunteerApplicationRef["volunteerAnswers"] as List<dynamic>!=null?(volunteerApplicationRef["volunteerAnswers"] as List<dynamic>).map((tag) => tag.toString()).toList():null,
+            volunteerAnswers:volunteerApplicationRef["volunteerAnswers"] as Map<dynamic,dynamic>!=null?(volunteerApplicationRef["volunteerAnswers"] as Map<dynamic,dynamic>):null,//.map((tag) => tag.toString()).toList():null,
             dateOfApplication:volunteerApplicationRef["dateOfApplication"]!=null? DateTime.parse(volunteerApplicationRef["dateOfApplication"]):null,
           );
           if(loadedForm.selectorId==null){
@@ -117,12 +127,12 @@ class SelectionApplicationReview with ChangeNotifier {
               volunteerId: volunteerApplicationRef["volunteerAccountId"],
               selectorId: volunteerApplicationRef["selectorAccountId"],
               volunteerAnswers: volunteerApplicationRef["volunteerAnswers"]
-                          as List<dynamic> !=
+                          as Map<dynamic,dynamic> !=
                       null
                   ? (volunteerApplicationRef["volunteerAnswers"]
-                          as List<dynamic>)
-                      .map((tag) => tag.toString())
-                      .toList()
+                          as Map<dynamic,dynamic>)
+                      // .map((tag) => tag.toString())
+                      // .toList()
                   : null,
               dateOfApplication: volunteerApplicationRef["dateOfApplication"] !=
                       null
@@ -161,6 +171,7 @@ class SelectionApplicationReview with ChangeNotifier {
     });
     final activeApplicationRef =await databaseRef.child('volunteeractiveapplication').child(volunteerId).remove();
   }
+
   Future<void> declineVolunteer(String volunteerId,int awardedMarks)async{
     String _selectorId = _authRef.currentUser.uid;
 

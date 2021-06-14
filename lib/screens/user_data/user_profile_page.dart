@@ -1,8 +1,9 @@
 import 'package:allay/homepage.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/providers/volunteer/volunteer_application_form.dart';
 import 'package:allay/screens/user_data/login_page.dart';
+import 'package:allay/screens/volunteer/volunteer_application_rules_screen.dart';
 import 'package:allay/screens/volunteer/volunteer_application_screen.dart';
 import 'package:allay/widgets/maindrawer.dart';
 import 'package:allay/widgets/user_data/user_not_loggedin.dart';
@@ -27,16 +28,17 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   String _username = ' ';
   String _userEmailId = ' ';
-  String _userPhone = ' ';
+  String userBio;
   String _userProfilePhoto = null;
-  int touchedIndex;
+  // int touchedIndex;
   bool _isLoading = true;
   bool _loggedIn = false;
   bool _loggingOut = false;
   bool _logOut = false;
   final storage = new FlutterSecureStorage();
-  int _userAge = null;
+  DateTime userDateOfBirth = null;
   bool applyButton = false;
+  int userRole = 5;
   Future<void> _fetchProfile() async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     if (_auth == null || _auth.currentUser == null) {
@@ -54,14 +56,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
       });
       await Provider.of<UserData>(context, listen: false).fetchUser();
       var currentUser = Provider.of<UserData>(context, listen: false).userData;
+      userRole = currentUser.userRole;
       _username = currentUser.userName;
       _userEmailId = currentUser.userEmail;
-      _userPhone = currentUser.userPhone;
-      _userAge = currentUser.userAge;
+      userBio = currentUser.userBio;
+      userDateOfBirth = currentUser.userDateOfBirth;
       _userProfilePhoto = currentUser.profilePhotoLink != null
           ? currentUser.profilePhotoLink
           : null;
-      if(currentUser.userRole==5) {
+      if (currentUser.userRole == 5) {
         applyButton =
             await Provider.of<VolunteerApplicationForm>(context, listen: false)
                 .fetchVolunteerForm();
@@ -100,7 +103,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       drawer: MainDrawer(),
       body: Container(
         // alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0),
+        // padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0),
         child: _isLoading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -109,242 +112,230 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ? SingleChildScrollView(
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          'My Profile',
-                          style: TextStyle(
-                              fontSize: 30.0, fontFamily: 'Libre Baskerville'
-                              //color: Colors.white
-                              ),
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CircleAvatar(
-                          backgroundImage: _userProfilePhoto != null
-                              ? NetworkImage(_userProfilePhoto)
-                              : AssetImage('assets/images/userimage.png'),
-                          //: FileImage(loadedBirthday.imageofPerson),
-                          radius: MediaQuery.of(context).size.width * 0.18,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
                         Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.black54)),
+                          color: Colors.blueGrey,//const Color(0xFF305496).withOpacity(0.9),
+                          // color: Colors.teal.shade300,
+                          // height: 300,
+                          width: MediaQuery.of(context).size.width,
                           child: Column(
                             children: [
-                              ListTile(
-                                leading: Icon(
-                                  Icons.person_outline_rounded,
-                                  color: themeColor,
-                                  size: 28.0,
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                'My Profile',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                    fontSize: 30.0, fontFamily: 'Libre Baskerville'
+                                  //color: Colors.white
                                 ),
-                                title: Text(
-                                  'Name',
-                                  textAlign: TextAlign.left,
-                                  textScaleFactor: 1.3,
-                                  style: TextStyle(
-                                    color: themeColor,
+                                textAlign: TextAlign.left,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: new BorderRadius.all(new Radius.circular(70.0)),
+                                  border: new Border.all(
+                                    color: Colors.white,
+                                    width: 4.0,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  _username,
-                                  //textScaleFactor: 1.4,
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
+                                child: CircleAvatar(
+                                  // foregroundColor: Colors.blue,
+                                  backgroundImage: _userProfilePhoto != null
+                                      ? NetworkImage(_userProfilePhoto)
+                                      : AssetImage('assets/images/userimage.png'),
+                                  //: FileImage(loadedBirthday.imageofPerson),
+                                  radius: 65//MediaQuery.of(context).size.width * 0.18,
                                 ),
                               ),
                               SizedBox(
-                                height: 5,
+                                height: 20,
                               ),
+                              Text(
+                                _username,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                //textScaleFactor: 1.4,
+                                textAlign: TextAlign.center,
+                                // overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              if(userBio!=null)
                               Container(
-                                child: ListTile(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Text(
+                                  userBio,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22.0,
+                                  ),
+
+                                  //textScaleFactor: 1.4,
+                                  textAlign: TextAlign.center,
+                                  // overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Container(
+                            // decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(8),
+                            //     border: Border.all(color: Colors.black54)),
+                            child: Column(
+                              children: [
+                                // ListTile(
+                                //   leading: Icon(
+                                //     Icons.person,
+                                //     color: themeColor,
+                                //     size: 28.0,
+                                //   ),
+                                //   title: Text(
+                                //     'Name',
+                                //     textAlign: TextAlign.left,
+                                //     textScaleFactor: 1.3,
+                                //     style: TextStyle(
+                                //       color: themeColor,
+                                //     ),
+                                //   ),
+                                //   subtitle: Text(
+                                //     _username,
+                                //     //textScaleFactor: 1.4,
+                                //     textAlign: TextAlign.start,
+                                //     overflow: TextOverflow.ellipsis,
+                                //   ),
+                                // ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                ListTile(
                                   leading: Icon(
-                                    Icons.calendar_today_rounded,
+                                    Icons.date_range_rounded,
                                     color: themeColor,
                                     size: 28.0,
                                   ),
                                   title: Text(
-                                    'Age',
+                                    'Birth Date',
                                     textAlign: TextAlign.left,
                                     textScaleFactor: 1.3,
                                     style: TextStyle(
                                       color: themeColor,
                                     ),
                                   ),
-                                  subtitle: _userAge != null
-                                      ? Text(_userAge.toString(),
+                                  subtitle: userDateOfBirth != null
+                                      ? Text(
+                                      DateFormat('dd / MM / yyyy').format(userDateOfBirth),
                                           //textScaleFactor: 1.4,
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.ellipsis,
                                         )
                                       : Text('None'),
                                 ),
-                              ),
-                              ListTile(
-                                leading: Icon(
-                                  Icons.account_circle_rounded,
-                                  color: themeColor,
-                                  size: 28.0,
-                                ),
-                                title: Text(
-                                  'Email',
-                                  textAlign: TextAlign.left,
-                                  textScaleFactor: 1.3,
-                                  style: TextStyle(
+                                ListTile(
+                                  leading: Icon(
+                                    Icons.account_circle_rounded,
                                     color: themeColor,
+                                    size: 28.0,
+                                  ),
+                                  title: Text(
+                                    'Role',
+                                    textAlign: TextAlign.left,
+                                    textScaleFactor: 1.3,
+                                    style: TextStyle(
+                                      color: themeColor,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    getRoleText(userRole),
+                                    //textScaleFactor: 1.4,
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  _userEmailId,
-                                  //textScaleFactor: 1.4,
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              // Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
-                              ListTile(
-                                leading: Icon(
-                                  Icons.phone,
-                                  color: themeColor,
-                                  size: 28.0,
-                                ),
-                                title: Text(
-                                  'Phone',
-                                  textAlign: TextAlign.left,
-                                  textScaleFactor: 1.3,
-                                  style: TextStyle(
+                                ListTile(
+                                  leading: Icon(
+                                    Icons.email_rounded,
                                     color: themeColor,
+                                    size: 28.0,
+                                  ),
+                                  title: Text(
+                                    'Email',
+                                    textAlign: TextAlign.left,
+                                    textScaleFactor: 1.3,
+                                    style: TextStyle(
+                                      color: themeColor,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    _userEmailId,
+                                    //textScaleFactor: 1.4,
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  _userPhone != null ? _userPhone : 'None',
-                                  //textScaleFactor: 1.4,
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
+                                // Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
+                                // ListTile(
+                                //   leading: Icon(
+                                //     Icons.phone,
+                                //     color: themeColor,
+                                //     size: 28.0,
+                                //   ),
+                                //   title: Text(
+                                //     'Phone',
+                                //     textAlign: TextAlign.left,
+                                //     textScaleFactor: 1.3,
+                                //     style: TextStyle(
+                                //       color: themeColor,
+                                //     ),
+                                //   ),
+                                //   subtitle: Text(
+                                //     _userPhone != null ? _userPhone : 'None',
+                                //     //textScaleFactor: 1.4,
+                                //     textAlign: TextAlign.start,
+                                //     overflow: TextOverflow.ellipsis,
+                                //   ),
+                                // ),
+                              ],
+                            ),
                           ),
                         ),
-                        // SizedBox(
-                        //   height: 30,
-                        // ),
-                        // // Text('My Blogs')
-                        // SizedBox(
-                        //   height: 30,
-                        // ),
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.width*0.55,
-                        //   width: MediaQuery.of(context).size.width*0.55,
-                        //   child: PieChart(
-                        //     PieChartData(
-                        //       // pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
-                        //       //   setState(() {
-                        //       //     if (pieTouchResponse.touchInput is FlLongPressEnd ||
-                        //       //         pieTouchResponse.touchInput is FlPanEnd) {
-                        //       //       touchedIndex = -1;
-                        //       //     } else {
-                        //       //       touchedIndex = pieTouchResponse.touchedSectionIndex;
-                        //       //     }
-                        //       //   });
-                        //       // }),
-                        //       borderData: FlBorderData(
-                        //         show: false,
-                        //       ),
-                        //       sectionsSpace: 0,
-                        //       centerSpaceRadius: 60,
-                        //       sections: [
-                        //         PieChartSectionData(
-                        //           value: 30,
-                        //           radius: 50,
-                        //           color: getMoodColorFromNumber(1),
-                        //           // title: 'Happy'
-                        //         ),
-                        //         PieChartSectionData(
-                        //           value: 20,
-                        //           radius: 50,
-                        //           color: getMoodColorFromNumber(2),
-                        //           // title: 'Excited'
-                        //         ),
-                        //         PieChartSectionData(
-                        //           value: 15,
-                        //           radius: 50,
-                        //           color: getMoodColorFromNumber(3),
-                        //           // title: 'Angry'
-                        //         ),
-                        //         PieChartSectionData(
-                        //           value: 20,
-                        //           radius: 50,
-                        //           color: getMoodColorFromNumber(4),
-                        //           // title: 'Sad'
-                        //         ),
-                        //         PieChartSectionData(
-                        //           value: 10,
-                        //           radius: 50,
-                        //           color: getMoodColorFromNumber(5),
-                        //           // title: 'Depressed'
-                        //         ),
-                        //         PieChartSectionData(
-                        //             value: 35,
-                        //             radius: 50,
-                        //             color: getMoodColorFromNumber(6),
-                        //             // title: 'Neutral'
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            if(applyButton)
+                        if (applyButton)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child:
                             MaterialButton(
                               elevation: 3,
                               onPressed: () {
-                                updateRole(4);
+                                Navigator.of(context)
+                                    .pushNamed(VolunteerApplicationRulesScreen.routeName);
                                 // Navigator.of(context)
                                 //     .pushNamed(UserAccountEditScreen.routename);
                               },
-                              color: Colors.teal,
-                              child: Text('Volunteer Mode',
+                              color: Theme.of(context).primaryColor,
+                              child: Text('Apply for Volunteer',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16)),
                               textColor: Colors.white,
                             ),
-                            MaterialButton(
-                              elevation: 3,
-                              // minWidth: double.maxFinite,
-                              // height: 50,
-                              onPressed: () {
-                                updateRole(5);
-                                // Navigator.of(context)
-                                //     .pushNamed(UserAccountEditScreen.routename);
-                              },
-                              color: Colors.teal,
-                              child:
-                              // _loggingOut
-                              //     ? CircularProgressIndicator()
-                              //     :
-                                Text('      User Mode      ',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16)),
-                              textColor: Colors.white,
-                            ),
-                          ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
+                        // SizedBox(
+                        //   height: 20,
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -354,7 +345,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 Navigator.of(context)
                                     .pushNamed(UserAccountEditScreen.routename);
                               },
-                              color: Colors.teal,
+                              color: Theme.of(context).primaryColor,
                               child: Text('Edit Profile',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16)),
@@ -365,7 +356,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               // minWidth: double.maxFinite,
                               // height: 50,
                               onPressed: logoutUser,
-                              color: Colors.teal,
+                              color: Theme.of(context).primaryColor,
                               child: _loggingOut
                                   ? CircularProgressIndicator()
                                   : Text('   Logout   ',
@@ -420,19 +411,44 @@ class _UserProfilePageState extends State<UserProfilePage> {
           .pushNamedAndRemoveUntil(LoginPage.routename, (route) => false);
     }
   }
-  Future<void> updateRole(int role)async{
+
+  Future<void> updateRole() async {
+    // bool applyVolunteer = false;
+    // await showDialog(
+    //   context: context,
+    //   builder: (ctx) => AlertDialog(
+    //     title: Text('Are you sure?'),
+    //     content: Text('Do you want to submit this application form?'),
+    //     actions: <Widget>[
+    //       TextButton(
+    //         child: Text('No'),
+    //         onPressed: () {
+    //           applyVolunteer = false;
+    //           Navigator.of(ctx).pop();
+    //         },
+    //       ),
+    //       TextButton(
+    //         child: Text('Yes'),
+    //         onPressed: () {
+    //           applyVolunteer = true;
+    //           Navigator.of(ctx).pop();
+    //         },
+    //       )
+    //     ],
+    //   ),
+    // );
     // setState(() {
     //   _loggingOut = true;
     // });
-    await Provider.of<UserData>(context, listen: false).updateUserRole(role);
-    await Provider.of<UserData>(context, listen: false).fetchUser();
-    if(role == 5){
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(MyHomePage.routeName, (route) => false);
-    }else{
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(VolunteerQuestionApplicationScreen.routeName, (route) => false);
-    }
+    // await Provider.of<UserData>(context, listen: false).updateUserRole(role);
+    // await Provider.of<UserData>(context, listen: false).fetchUser();
+    // if(role == 5){
+    //   Navigator.of(context)
+    //       .pushNamedAndRemoveUntil(MyHomePage.routeName, (route) => false);
+    // }else{
+    // if (applyVolunteer)
+
+    // }
     // setState(() {
     //   _loggingOut = false;
     // });

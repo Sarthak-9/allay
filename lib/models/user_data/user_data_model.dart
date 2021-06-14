@@ -4,21 +4,22 @@ import 'package:flutter/material.dart';
 
 class UserDataModel with ChangeNotifier {
   // final String userFId;
+  // final String userId;
   final String userEmail;
-  final String userPhone;
+  final String userBio;
   final String userName;
   final int userRole;
-  final int userAge;
+  final DateTime userDateOfBirth;
   final String profilePhotoLink;
   final File userProfileImage;
   int averageHappinessIndex;
   UserDataModel(
       {
-        // this.userFId,
+        // this.userId,
         @required this.userEmail,
-        @required this.userPhone,
+        @required this.userBio,
         @required this.userName,
-        @required this.userAge,
+        @required this.userDateOfBirth,
         this.userRole,
         this.profilePhotoLink,
         this.userProfileImage,

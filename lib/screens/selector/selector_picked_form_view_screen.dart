@@ -1,6 +1,6 @@
 import 'package:allay/homepage.dart';
 import 'package:allay/models/volunteer/volunteer_question_form_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/selector/selector_application_review.dart';
 import 'package:allay/providers/volunteer/volunteer_application_form.dart';
 import 'package:allay/screens/selector/selector_picked_form_screen.dart';
@@ -67,7 +67,7 @@ class _SelectorPickedFormViewScreenState
             key: volunteerQuestionApplicationKey,
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   height: 20,
@@ -90,124 +90,117 @@ class _SelectorPickedFormViewScreenState
                 SizedBox(
                   height: 10,
                 ),
-                SizedBox(
-                    height: 230,
-                    width: deviceWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Question 1 :',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Image.network(volunteerQuestions[0]),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(pickedForm.volunteerAnswers[0],style: TextStyle(fontSize: 18),),
-                      ],
-                    )),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 1 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[0]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Answer : '+pickedForm.volunteerAnswers['answer1'],style: TextStyle(fontSize: 18),),
+                  ],
+                ),
+                Divider(),
+
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                    height: 230,
-                    width: deviceWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Question 2 :',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Image.network(volunteerQuestions[1]),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(pickedForm.volunteerAnswers[1],style: TextStyle(fontSize: 18),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 2 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[1]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Answer : '+pickedForm.volunteerAnswers['answer2'],style: TextStyle(fontSize: 18),),
 
-                      ],
-                    )),
+                  ],
+                ),
+                Divider(),
+
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                    height: 230,
-                    width: deviceWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Question 3 :',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Image.network(volunteerQuestions[2]),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(pickedForm.volunteerAnswers[2],style: TextStyle(fontSize: 18),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 3 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[2]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Answer : '+pickedForm.volunteerAnswers['answer3'],style: TextStyle(fontSize: 18),),
 
-                      ],
-                    )),
+                  ],
+                ),
+                Divider(),
+
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                  height: 230,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 4 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[3]),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(pickedForm.volunteerAnswers[3],style: TextStyle(fontSize: 18),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 4 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[3]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Answer : '+pickedForm.volunteerAnswers['answer4'],style: TextStyle(fontSize: 18),),
 
-                    ],
-                  ),
+                  ],
                 ),
+                Divider(),
+
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                  height: 230,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 5 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[4]),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(pickedForm.volunteerAnswers[4],style: TextStyle(fontSize: 18),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 5 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[4]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Answer : '+pickedForm.volunteerAnswers['answer5'],style: TextStyle(fontSize: 18),),
 
-                    ],
-                  ),
+                  ],
                 ),
+                Divider(),
+
                 SizedBox(
                   height: 20,
                 ),
@@ -215,86 +208,78 @@ class _SelectorPickedFormViewScreenState
                 SizedBox(
                   height: 20,
                 ),
-                SizedBox(
-                  height: 300,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 6 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[5]),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 100,
-                        child: Text(pickedForm.volunteerAnswers[5],style: TextStyle(fontSize: 18),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 6 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[5]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 100,
+                      child: Text('Answer : '+pickedForm.volunteerAnswers['answer6'],style: TextStyle(fontSize: 18),),
 
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                Divider(),
+
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                  height: 300,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 7 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[6]),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 100,
-                        child: Text(pickedForm.volunteerAnswers[6],style: TextStyle(fontSize: 18),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 7 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[6]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 100,
+                      child: Text('Answer : '+pickedForm.volunteerAnswers['answer7'],style: TextStyle(fontSize: 18),),
 
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                Divider(),
+
                 SizedBox(
                   height: 30,
                 ),
-                SizedBox(
-                  height: 300,
-                  width: deviceWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question 8 :',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image.network(volunteerQuestions[7]),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 100,
-                        child: Text(pickedForm.volunteerAnswers[7],style: TextStyle(fontSize: 18),),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question 8 :',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Image.network(volunteerQuestions[7]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 100,
+                      child: Text('Answer : '+pickedForm.volunteerAnswers['answer8'],style: TextStyle(fontSize: 18),),
 
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 30,

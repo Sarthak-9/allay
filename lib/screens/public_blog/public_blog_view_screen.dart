@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:allay/screens/public_blog/public_blog_author_profile_screen.dart';
 import '../../homepage.dart';
-import '../../providers/contants.dart';
+import '../../providers/constants.dart';
 
 class PublicBlogViewScreen extends StatefulWidget {
   static const routeName = '/public-blog-view-screen';
@@ -28,7 +28,7 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
     photoUrl = publicBlog.authorImageUrl;
     likedStatus = publicBlog.publicBlogCurrentUserLiked;
     return Scaffold(
-      appBar:  MainAppBar(),
+      appBar: MainAppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -46,10 +46,14 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
                   style: TextStyle(fontSize: 22),
                 ),
                 ListTile(
-                  onTap: ()=>Navigator.of(context).pushNamed(PublicBlogAuthorProfileScreen.routeName,arguments: publicBlogId),
+                  onTap: () => Navigator.of(context).pushNamed(
+                      PublicBlogAuthorProfileScreen.routeName,
+                      arguments: publicBlogId),
                   leading: CircleAvatar(
                     radius: MediaQuery.of(context).size.width * 0.09,
-                    backgroundImage:photoUrl!=null?NetworkImage(photoUrl): AssetImage("assets/images/userimage.png"),
+                    backgroundImage: photoUrl != null
+                        ? NetworkImage(photoUrl)
+                        : AssetImage("assets/images/userimage.png"),
                   ),
                   title: Text(publicBlog.authorUserName),
                   subtitle:
@@ -68,7 +72,7 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
                 ),
                 Divider(),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Row(
                       children: [
@@ -94,11 +98,27 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
                         Text(publicBlogLikes.toString()),
                       ],
                     ),
+                    // IconButton(
+                    //     icon: Icon(Icons.share_rounded), onPressed: () {}),
                     IconButton(
-                        icon: Icon(Icons.share_rounded), onPressed: () {}),
-                    IconButton(icon: Icon(Icons.save), onPressed: ()async {
-                      Provider.of<PublicBlogs>(context,listen: false).saveBlog(publicBlog.publicBlogId);
-                    }),
+                        icon: Icon(Icons.save),
+                        onPressed: () async {
+                          bool saveStatus = await Provider.of<PublicBlogs>(
+                                  context,
+                                  listen: false)
+                              .saveBlog(publicBlogId);
+                          if (saveStatus) {
+                            final snackBar = SnackBar(
+                                content: Text('Blog Saved Successfully'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else {
+                            final snackBar = SnackBar(
+                                content: Text('Blog Removed Successfully'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                        }),
                   ],
                 ),
                 SizedBox(
@@ -109,8 +129,10 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        onPressed: (){
-                          Navigator.of(context).pushNamed(EditBlogScreen.routeName,arguments: publicBlogId);
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                              EditBlogScreen.routeName,
+                              arguments: publicBlogId);
                         },
                         child: Text(
                           '  Edit Blog  ',
@@ -121,7 +143,7 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
                                 MaterialStateProperty.all(Colors.teal)),
                       ),
                       ElevatedButton(
-                        onPressed:() {
+                        onPressed: () {
                           deleteBlog(publicBlog.publicBlogId);
                         },
                         child: Text(
@@ -134,6 +156,38 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
                       ),
                     ],
                   ),
+                SizedBox(height: 10,),
+                TextButton(
+                  onPressed: ()async {
+                    await showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                      title: Text('Are you sure?'),
+                      content: Text('Do you think this question is inappropriate? The blog will be sent to admin for further monitoring.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Back'),
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('Report'),
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    );                  },
+                  child: Text(
+                    'Report Blog',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  // style: ButtonStyle(
+                  //     backgroundColor:
+                  //     MaterialStateProperty.all(Colors.teal)),
+                ),
               ],
             ),
           ),
@@ -167,9 +221,10 @@ class _PublicBlogViewScreenState extends State<PublicBlogViewScreen> {
         ],
       ),
     );
-    if(deleteStatus){
-        await Provider.of<PublicBlogs>(context,listen: false).deletePublicBlog(blogId);
-        Navigator.of(context).pushReplacementNamed(MyHomePage.routeName);
+    if (deleteStatus) {
+      await Provider.of<PublicBlogs>(context, listen: false)
+          .deletePublicBlog(blogId);
+      Navigator.of(context).pushReplacementNamed(MyHomePage.routeName);
       // Navigator.of(context).p
     }
   }

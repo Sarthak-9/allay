@@ -270,7 +270,6 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                           setState(() {
                             _chosenValue = mood;
                           });
-                          print(mood);
                           if(mood == 'No Filters'){
                             isMoodSorted = false;
                             sortedMood.clear();
@@ -309,7 +308,7 @@ class _UserBlogsScreenState extends State<UserBlogsScreen> {
                       child: Text(
                         'No Blogs',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 24,
                         ),
                       ),
                     ),

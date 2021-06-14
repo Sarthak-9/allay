@@ -1,5 +1,5 @@
 import 'package:allay/models/user_chat/user_chat_model.dart';
-import 'package:allay/providers/contants.dart';
+import 'package:allay/providers/constants.dart';
 import 'package:allay/providers/user_chat/user_chat_provider.dart';
 import 'package:allay/providers/user_data/user_data_provider.dart';
 import 'package:allay/screens/user_chat/user_chat_screen.dart';
@@ -136,7 +136,7 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
                   controller: postQuestionController,
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
-                    if (value.length <= 30) {
+                    if (value.length <= 0) {
                       return 'Question length not enough';
                     }
                     return null;
@@ -276,7 +276,6 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
                 builder: (context) => MyHomePage(
                   tabNumber: 4,
                 )));
-        print(4);
       }else{
         Navigator.pushReplacement(
             context,
@@ -284,7 +283,6 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
                 builder: (context) => MyHomePage(
                   tabNumber: 3,
                 )));
-        print(4);
 
         // Navigator.of(context).pushReplacementNamed(UserChatScreen.routeName);
       }
